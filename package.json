@@ -1,0 +1,8 @@
+{
+  "name": "jcpmf-frontend-vanilla",
+  "private": true,
+  "scripts": {
+    "dev": "node dev-server.js",
+    "start": "node dev-server.js"
+  }
+}

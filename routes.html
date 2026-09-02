@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17683e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <script src="/js/appearance-init.js"></script>
+  <title>Parcours running · JCPMF</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header data-navigation></header>
+  <main class="page routes-page">
+    <header class="page-heading routes-heading">
+      <div><p class="eyebrow">Courir dehors</p><h1>Parcours recommandés</h1><p class="muted">Choisissez votre point de départ : trois boucles de running seront calculées autour de vous.</p></div>
+    </header>
+    <p id="message" class="message error" role="alert" hidden></p>
+    <p class="route-safety-note">Les tracés sont indicatifs : vérifiez l’accessibilité du parcours et respectez toujours la circulation et les conditions sur place.</p>
+    <div class="routes-layout">
+      <aside class="routes-sidebar" aria-labelledby="routes-list-title">
+        <section class="route-origin-card" aria-labelledby="route-origin-title">
+          <div><p class="eyebrow">Point de départ</p><h2 id="route-origin-title">Où voulez-vous courir ?</h2></div>
+          <p class="route-origin-privacy">Pour créer de vrais chemins, seul le point de départ choisi est transmis aux services cartographiques OpenStreetMap et d’altitude Open-Meteo. Votre suivi GPS en direct reste sur l’appareil.</p>
+          <button id="use-gps-origin" class="button" type="button">⌖ Utiliser ma position</button>
+          <div class="route-origin-separator" aria-hidden="true"><span>ou</span></div>
+          <form id="address-form" class="route-address-form">
+            <label for="start-address">Entrer une adresse</label>
+            <div class="route-address-controls">
+              <input id="start-address" name="address" type="search" minlength="4" autocomplete="street-address" placeholder="Rue, ville ou code postal" required>
+              <button id="search-address" class="button button-ghost" type="submit">Calculer</button>
+            </div>
+          </form>
+          <p id="origin-status" class="origin-status" role="status">Votre position n’est pas encore définie.</p>
+          <p class="route-geocoding-note">La recherche transmet l’adresse à <a href="https://operations.osmfoundation.org/policies/nominatim/" target="_blank" rel="noopener">Nominatim / OpenStreetMap</a>, jamais au backend JCPMF. Le résultat est gardé localement pour éviter les requêtes répétées.</p>
+        </section>
+        <h2 id="routes-list-title">Choisir un parcours</h2>
+        <div id="routes-list" class="routes-list"><p class="route-empty">Localisez-vous ou indiquez une adresse pour recevoir trois propositions.</p></div>
+      </aside>
+      <section id="route-panel" class="route-map-card card" aria-labelledby="selected-route-title">
+        <header class="route-map-heading">
+          <div><p class="eyebrow">Parcours sélectionné</p><h2 id="selected-route-title">Choisissez un point de départ</h2><p id="selected-route-meta" class="muted">La carte affichera ensuite la première boucle proposée.</p></div>
+          <div class="map-tools">
+            <button id="locate-runner" class="button button-ghost" type="button">⌖ Me localiser</button>
+            <label class="follow-toggle" for="follow-position"><input id="follow-position" type="checkbox" checked> Suivi automatique</label>
+          </div>
+        </header>
+        <div id="route-map" class="route-map" role="application" aria-label="Carte du parcours sélectionné"></div>
+        <div class="route-map-legend" aria-label="Légende de la carte"><span><i class="route-line"></i> Itinéraire</span><span><i class="trace-line"></i> Votre trace</span><span><i class="start-dot"></i> Départ</span><span><i class="finish-dot"></i> Arrivée</span></div>
+        <p id="gps-status" class="gps-status" role="status">La trace GPS n’est jamais envoyée au backend JCPMF.</p>
+        <section id="run-tracker" class="run-tracker" aria-label="Suivi de course">
+          <div class="run-metrics">
+            <article><span>Temps</span><strong id="run-time">00:00:00</strong></article>
+            <article><span>Distance</span><strong id="run-distance">0,00 km</strong></article>
+            <article><span>Allure moyenne</span><strong id="run-pace">--:-- /km</strong></article>
+            <article><span>Progression</span><strong id="run-progress">0 %</strong></article>
+          </div>
+          <div class="progress-track" aria-hidden="true"><span id="run-progress-bar"></span></div>
+          <div class="run-actions">
+            <button id="pause-run" class="button button-ghost" type="button" disabled>Pause</button>
+            <button id="finish-run" class="button button-danger" type="button" disabled>Terminer</button>
+          </div>
+        </section>
+      </section>
+    </div>
+  </main>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script type="module" src="/js/routes.js"></script>
+</body>
+</html>

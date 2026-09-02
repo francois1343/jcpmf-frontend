@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Avatar coureur neutre orange</title>
+  <circle cx="64" cy="64" r="64" fill="#fff0d9"/>
+  <path d="M18 128c6-28 21-42 46-42s40 14 46 42" fill="#d36c35"/>
+  <circle cx="64" cy="58" r="28" fill="#e7aa79"/>
+  <path d="M35 50c3-20 13-31 29-31 17 0 28 11 30 31-11-2-21-7-29-15-8 9-18 14-30 15Z" fill="#654335"/>
+  <path d="M42 39c14-8 29-9 44-2" fill="none" stroke="#f3a24f" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="53" cy="59" r="2.5" fill="#3d302a"/><circle cx="75" cy="59" r="2.5" fill="#3d302a"/>
+  <path d="M54 71c6 5 14 5 20 0" fill="none" stroke="#9a5b45" stroke-width="3" stroke-linecap="round"/>
+</svg>

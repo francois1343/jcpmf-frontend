@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17683e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <script src="/js/appearance-init.js"></script>
+  <title>Connexion · JCPMF</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="auth-page">
+  <main class="auth-card">
+    <div><p class="eyebrow">Bienvenue</p><h1>Se connecter</h1></div>
+    <p id="message" class="message error" role="alert" hidden></p>
+    <form id="login-form" class="stack">
+      <label>E-mail ou nom d’utilisateur
+        <input id="identifier" name="identifier" autocomplete="username" required autofocus>
+      </label>
+      <label>Mot de passe
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+      </label>
+      <button class="button button-large" type="submit">Entrer dans l’application</button>
+    </form>
+    <button class="button button-ghost" type="button" data-install-app hidden>Installer l’application</button>
+    <p class="auth-footer">Pas encore de compte ? <a href="/register.html">Créer un compte</a></p>
+  </main>
+  <script type="module" src="/js/login.js"></script>
+</body>
+</html>

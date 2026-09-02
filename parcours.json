@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "parcours": [
+    {
+      "id": "boucle-decouverte-3k6",
+      "titre": "Boucle découverte",
+      "description": "Une boucle courte et progressive, idéale pour reprendre ou courir tranquillement.",
+      "distanceKm": 3.6,
+      "deniveleM": 35,
+      "difficulte": "Facile",
+      "directionDeg": 25,
+      "coordinates": [
+        [50.81262, 4.37342],
+        [50.81065, 4.37513],
+        [50.80784, 4.37769],
+        [50.80543, 4.38004],
+        [50.80294, 4.38246],
+        [50.80074, 4.37965],
+        [50.80051, 4.37531],
+        [50.80272, 4.37168],
+        [50.80562, 4.36921],
+        [50.80863, 4.36795],
+        [50.81145, 4.36947],
+        [50.81255, 4.37370]
+      ]
+    },
+    {
+      "id": "boucle-equilibre-5k7",
+      "titre": "Boucle équilibre",
+      "description": "Un parcours intermédiaire pour travailler la régularité sur une distance proche de 5 km.",
+      "distanceKm": 5.7,
+      "deniveleM": 48,
+      "difficulte": "Intermédiaire",
+      "directionDeg": 145,
+      "coordinates": [
+        [50.84436, 4.36362],
+        [50.84325, 4.36991],
+        [50.84216, 4.37642],
+        [50.84111, 4.38302],
+        [50.84013, 4.39041],
+        [50.83919, 4.39758],
+        [50.84092, 4.40268],
+        [50.84315, 4.39884],
+        [50.84346, 4.39103],
+        [50.84386, 4.38279],
+        [50.84417, 4.37402],
+        [50.84426, 4.36392]
+      ]
+    },
+    {
+      "id": "boucle-endurance-8k8",
+      "titre": "Boucle endurance",
+      "description": "Une proposition plus longue pour développer progressivement votre endurance.",
+      "distanceKm": 8.8,
+      "deniveleM": 18,
+      "difficulte": "Soutenu",
+      "directionDeg": 265,
+      "coordinates": [
+        [50.84797, 4.34645],
+        [50.85423, 4.34381],
+        [50.86083, 4.34131],
+        [50.86728, 4.33872],
+        [50.87386, 4.33604],
+        [50.88022, 4.33342],
+        [50.88627, 4.33091],
+        [50.88011, 4.33421],
+        [50.87362, 4.33696],
+        [50.86713, 4.33961],
+        [50.86062, 4.34221],
+        [50.85405, 4.34478],
+        [50.84786, 4.34680]
+      ]
+    }
+  ]
+}

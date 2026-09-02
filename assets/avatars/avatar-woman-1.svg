@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Avatar femme sur fond rose</title>
+  <circle cx="64" cy="64" r="64" fill="#f6e2e7"/>
+  <path d="M22 128c4-28 18-42 42-42s38 14 42 42" fill="#a33c62"/>
+  <path d="M31 61c0-29 13-43 34-43 22 0 34 17 33 47l-7 30H37Z" fill="#5d382d"/>
+  <circle cx="64" cy="57" r="28" fill="#efbb91"/>
+  <path d="M37 49c5-21 16-30 31-30 13 0 24 8 29 24-15 3-29-1-40-11-4 8-11 14-20 17Z" fill="#5d382d"/>
+  <circle cx="53" cy="58" r="2.5" fill="#3a2a25"/><circle cx="75" cy="58" r="2.5" fill="#3a2a25"/>
+  <path d="M54 70c6 5 14 5 20 0" fill="none" stroke="#b25f62" stroke-width="3" stroke-linecap="round"/>
+</svg>

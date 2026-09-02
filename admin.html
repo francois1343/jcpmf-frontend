@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17683e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <script src="/js/appearance-init.js"></script>
+  <title>Administration · JCPMF</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header data-navigation></header>
+  <main class="page">
+    <header class="page-heading">
+      <div><p class="eyebrow">Back-office</p><h1>Administration JCPMF</h1></div>
+      <div class="page-heading-actions">
+        <button id="export-json" class="button" type="button">Sauvegarder la base JSON</button>
+        <button id="refresh" class="button button-ghost" type="button">Actualiser</button>
+      </div>
+    </header>
+    <p class="data-privacy-note">La sauvegarde contient toutes les données locales de ce navigateur, y compris les informations de connexion. Conservez-la dans un endroit privé.</p>
+    <p id="message" class="message error" role="alert" hidden></p>
+    <div class="tabs" aria-label="Sections">
+      <button class="active" type="button" data-section="content">Contenu du programme</button>
+      <button type="button" data-section="users">Suivi des coureurs</button>
+    </div>
+    <section id="admin-content" class="stack"></section>
+  </main>
+  <script type="module" src="/js/admin.js"></script>
+</body>
+</html>

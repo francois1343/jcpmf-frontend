@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17683e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <script src="/js/appearance-init.js"></script>
+  <title>Inscription · JCPMF</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="auth-page">
+  <main class="auth-card">
+    <div><p class="eyebrow">Nouveau parcours</p><h1>Créer un compte</h1></div>
+    <p id="message" class="message error" role="alert" hidden></p>
+    <form id="register-form" class="stack">
+      <label>Nom d’utilisateur
+        <input id="username" name="username" minlength="3" autocomplete="username" required autofocus>
+      </label>
+      <label>Adresse e-mail
+        <input id="email" name="email" type="email" autocomplete="email" required>
+      </label>
+      <label>Mot de passe
+        <input id="password" name="password" type="password" minlength="10" autocomplete="new-password" required>
+      </label>
+      <button class="button button-large" type="submit">Créer mon compte</button>
+    </form>
+    <button class="button button-ghost" type="button" data-install-app hidden>Installer l’application</button>
+    <p class="auth-footer">Déjà inscrit·e ? <a href="/login.html">Se connecter</a></p>
+  </main>
+  <script type="module" src="/js/register.js"></script>
+</body>
+</html>
