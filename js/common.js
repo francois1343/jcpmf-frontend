@@ -1,5 +1,5 @@
 import './appearance.js'
-import { clearSession, currentUser, getStoredUser, getToken } from './api.js'
+import { clearSession, currentUser, getToken } from './api.js'
 import { renderProfileAvatar } from './avatar.js'
 import { setupInstallButtons } from './pwa.js'
 import { startReminderChecks } from './reminders.js'
@@ -51,13 +51,21 @@ export async function requireUser(requiredRole = null) {
   }
 }
 
-export function redirectAuthenticatedUser() {
-  const user = getStoredUser()
-  if (getToken() && user) {
+export async function redirectAuthenticatedUser() {
+  const requestToken = getToken()
+  if (!requestToken) return false
+
+  try {
+    const user = await currentUser()
+    if (getToken() !== requestToken) return false
     window.location.replace(user.role === 'admin' ? '/admin.html' : '/index.html')
     return true
+  } catch {
+    // La page de connexion reste affichée si le token est expiré ou si
+    // le backend est temporairement indisponible. Cela évite une boucle
+    // login.html -> index.html -> login.html basée sur une session en cache.
+    return false
   }
-  return false
 }
 
 export function mountNavigation(user) {

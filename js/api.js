@@ -27,8 +27,8 @@ export function clearSession() {
 
 export async function api(path, options = {}) {
   const headers = new Headers(options.headers || {})
-  const token = getToken()
-  if (token) headers.set('Authorization', `Bearer ${token}`)
+  const requestToken = getToken()
+  if (requestToken) headers.set('Authorization', `Bearer ${requestToken}`)
   if (options.body && !(options.body instanceof FormData)) headers.set('Content-Type', 'application/json')
 
   let response
@@ -56,7 +56,8 @@ export async function api(path, options = {}) {
     : await response.json().catch(() => null)
 
   if (!response.ok) {
-    if (response.status === 401) clearSession()
+    // Une ancienne requête ne doit pas effacer une session renouvelée entre-temps.
+    if (response.status === 401 && getToken() === requestToken) clearSession()
     throw new Error(data?.message || `Erreur HTTP ${response.status}`)
   }
   return data
@@ -75,7 +76,8 @@ export async function register(username, email, password) {
 }
 
 export async function currentUser() {
+  const requestToken = getToken()
   const user = await api('/auth/me')
-  localStorage.setItem(USER_KEY, JSON.stringify(user))
+  if (getToken() === requestToken) localStorage.setItem(USER_KEY, JSON.stringify(user))
   return user
 }
