@@ -65,7 +65,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 .brand { display: inline-flex; align-items: center; flex: 0 0 auto; text-decoration: none; }
 .brand img { width: 8.5rem; height: 3rem; display: block; object-fit: contain; }
-.nav-controls { display: flex; align-items: center; gap: .22rem; padding: .25rem; border: 1px solid var(--border); border-radius: .9rem; background: var(--surface-soft); box-shadow: 0 5px 18px rgb(18 67 39 / 5%); }
+.nav-controls { display: flex; align-items: center; gap: .35rem; padding: .38rem .42rem; border: 1px solid var(--border); border-radius: 1rem; background: var(--surface-soft); box-shadow: 0 5px 18px rgb(18 67 39 / 5%); }
 .nav-user { max-width: 8rem; overflow: hidden; color: var(--muted); font-size: .82rem; text-overflow: ellipsis; white-space: nowrap; }
 .nav-identity { justify-self: end; display: inline-flex; align-items: center; gap: .5rem; }
 .nav-demo-badge { padding: .2rem .35rem; border-radius: 999px; color: var(--green-800); background: var(--accent-soft); font-size: .58rem; font-weight: 900; text-transform: uppercase; }
@@ -75,14 +75,14 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .avatar-initials { line-height: 1; letter-spacing: .02em; }
 .nav-action {
   --nav-action-color: var(--green-700);
-  min-height: 2.35rem;
+  min-height: 2.75rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: .42rem;
   padding: .48rem .7rem;
   border: 1px solid transparent;
-  border-radius: .65rem;
+  border-radius: .75rem;
   color: var(--nav-action-color);
   background: transparent;
   font-size: .76rem;
@@ -103,11 +103,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   background: color-mix(in srgb, var(--nav-action-color) 14%, var(--surface));
   box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--nav-action-color) 78%, transparent);
 }
-.nav-action-icon { width: .95rem; height: .95rem; flex: 0 0 auto; display: grid; place-items: center; }
+.nav-action-icon { width: 1.1rem; height: 1.1rem; flex: 0 0 auto; display: grid; place-items: center; }
 .nav-action-icon svg { width: 100%; height: 100%; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 .nav-action-admin .nav-action-icon svg { fill: currentColor; stroke: none; }
-.nav-action-icon-only { width: 2.35rem; padding: .48rem; }
-.nav-control-divider { width: 1px; height: 1.4rem; margin: 0 .12rem; background: var(--border); }
+.nav-action-icon-only { width: 2.75rem; padding: .58rem; }
+.nav-control-divider { width: 1px; height: 1.65rem; margin: 0 .18rem; background: var(--border); }
 .nav-action-home { --nav-action-color: var(--green-700); }
 .nav-action-routes { --nav-action-color: #24748a; }
 .nav-action-profile, .nav-action-admin { --nav-action-color: #70539a; }
@@ -600,7 +600,7 @@ th { color: var(--muted); font-size: .75rem; text-transform: uppercase; }
   .brand img { width: 7.5rem; height: 2.65rem; }
   .nav-identity { justify-self: end; }
   .nav-user { display: none; }
-  .nav-controls { grid-column: 1 / -1; justify-self: center; }
+  .nav-controls { grid-column: 1 / -1; justify-self: center; justify-content: space-between; width: min(100%, 23rem); padding: .42rem .55rem; }
   .install-popup { right: 1rem; }
   .routes-layout { grid-template-columns: 1fr; }
   .route-origin-card { padding: 1rem; }
