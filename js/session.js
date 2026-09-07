@@ -1,8 +1,9 @@
 import { api } from './api.js'
 import { APPEARANCE_EVENT, isDynamicColorsEnabled } from './appearance.js'
 import { escapeHtml, formatMinutes, formatTime, mountNavigation, requireUser, showMessage } from './common.js'
-import { effortDurationOf, getLatestSessionCompletion, recordSessionCompletion } from './gamification.js'
+import { effortDurationOf, getGamificationStats, getLatestSessionCompletion, recordSessionCompletion } from './gamification.js'
 import { confirmLocationAccess } from './location-consent.js'
+import { prepareShareSummary, sharePreparedSummary } from './share-summary.js'
 
 const container = document.querySelector('#session')
 const message = document.querySelector('#message')
@@ -321,6 +322,35 @@ function recoveryMessage(wellness) {
   return 'Votre ressenti est enregistré. Il vous aidera à suivre votre forme séance après séance.'
 }
 
+function bindSessionShare(completion) {
+  const button = document.querySelector('#share-session-summary')
+  const status = document.querySelector('#share-session-status')
+  if (!button || !status || !completion) return
+  const prepared = prepareShareSummary({
+    title: completion.title || session.title,
+    completedAt: completion.completedAt,
+    durationSeconds: completion.durationSeconds,
+    distanceKm: completion.distanceKm,
+    stats: getGamificationStats(new Date(), userId),
+  })
+  button.addEventListener('click', async () => {
+    button.disabled = true
+    button.textContent = 'Préparation…'
+    status.textContent = ''
+    try {
+      const result = await sharePreparedSummary(prepared)
+      status.textContent = result.message
+      status.className = 'share-status success'
+    } catch (error) {
+      status.textContent = error.message || 'Le partage est indisponible sur cet appareil.'
+      status.className = 'share-status error'
+    } finally {
+      button.disabled = false
+      button.textContent = '↗ Partager mon bilan'
+    }
+  })
+}
+
 async function completeSession(wellness) {
   container.querySelectorAll('button').forEach((button) => { button.disabled = true })
   try {
@@ -328,7 +358,7 @@ async function completeSession(wellness) {
       method: 'PUT',
       body: { distanceKm: Number(state.distanceKm.toFixed(2)), stepsCount: state.stepsCount },
     })
-    recordSessionCompletion({
+    const completion = recordSessionCompletion({
       userId,
       sessionId,
       title: session.title,
@@ -339,7 +369,8 @@ async function completeSession(wellness) {
       wellness,
     })
     localStorage.removeItem(storageKey())
-    container.innerHTML = `<section class="card stack completion-card"><span class="completion-icon" aria-hidden="true">✓</span><p class="eyebrow">Séance enregistrée</p><h1>Votre progression est à jour.</h1><p class="muted">${escapeHtml(recoveryMessage(wellness))}</p><a class="button button-large" href="/index.html">Retour au programme</a></section>`
+    container.innerHTML = `<section class="card stack completion-card"><span class="completion-icon" aria-hidden="true">✓</span><p class="eyebrow">Séance enregistrée</p><h1>Votre progression est à jour.</h1><p class="muted">${escapeHtml(recoveryMessage(wellness))}</p><div class="completion-actions"><button id="share-session-summary" class="button button-large" type="button">↗ Partager mon bilan</button><a class="button button-ghost button-large" href="/index.html">Retour au programme</a></div><p id="share-session-status" class="share-status" role="status" aria-live="polite"></p></section>`
+    bindSessionShare(completion)
   } catch (error) {
     showMessage(message, error.message)
     container.querySelectorAll('button').forEach((button) => { button.disabled = false })
@@ -349,6 +380,12 @@ async function completeSession(wellness) {
 function renderHistory() {
   const completion = getLatestSessionCompletion(sessionId, userId)
   const wellness = completion?.wellness
+  const shareCompletion = completion || {
+    title: session.title,
+    completedAt: session.completedAt || new Date().toISOString(),
+    durationSeconds: effortDurationOf(session.exercises),
+    distanceKm: Number(session.distanceKm) || 0,
+  }
   const discomfortLabels = { none: 'Aucune', light: 'Légère', high: 'Importante' }
   container.className = ''
   container.innerHTML = `
@@ -359,8 +396,10 @@ function renderHistory() {
         <article><small>Pas</small><strong>${Number(session.stepsCount || 0)} pas</strong></article>
       </div>
       ${wellness ? `<div class="history-wellness" aria-label="Forme après la séance"><p class="eyebrow">Votre ressenti</p><div><span>Énergie <strong>${wellness.energy}/5</strong></span><span>Effort <strong>${wellness.effort}/5</strong></span><span>Gêne <strong>${discomfortLabels[wellness.discomfort]}</strong></span></div></div>` : ''}
-      <a class="button" href="/index.html">Retour au programme</a>
+      <div class="completion-actions"><button id="share-session-summary" class="button" type="button">↗ Partager mon bilan</button><a class="button button-ghost" href="/index.html">Retour au programme</a></div>
+      <p id="share-session-status" class="share-status" role="status" aria-live="polite"></p>
     </section>`
+  bindSessionShare(shareCompletion)
 }
 
 async function load() {

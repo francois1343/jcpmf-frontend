@@ -8,6 +8,8 @@ import {
 } from './routes-core.js'
 import { createRecommendedRoutes, geocodeAddress } from './route-planner.js'
 import { confirmLocationAccess } from './location-consent.js'
+import { getGamificationStats, recordSessionCompletion } from './gamification.js'
+import { prepareShareSummary, sharePreparedSummary } from './share-summary.js'
 
 const routesList = document.querySelector('#routes-list')
 const routePanel = document.querySelector('#route-panel')
@@ -19,6 +21,8 @@ const locateButton = document.querySelector('#locate-runner')
 const followCheckbox = document.querySelector('#follow-position')
 const pauseButton = document.querySelector('#pause-run')
 const finishButton = document.querySelector('#finish-run')
+const shareRunButton = document.querySelector('#share-run')
+const shareRunStatus = document.querySelector('#share-run-status')
 const gpsOriginButton = document.querySelector('#use-gps-origin')
 const addressForm = document.querySelector('#address-form')
 const addressInput = document.querySelector('#start-address')
@@ -26,6 +30,7 @@ const addressButton = document.querySelector('#search-address')
 const originStatus = document.querySelector('#origin-status')
 const mapTools = document.querySelector('.map-tools')
 const runTracker = document.querySelector('#run-tracker')
+let currentUserId = null
 
 // État unique de la sortie : la trace GPS n'est jamais persistée ni envoyée à l'API JCPMF.
 const state = {
@@ -52,6 +57,7 @@ const state = {
   elapsedBeforePauseMs: 0,
   resumedAt: null,
   timerId: null,
+  preparedShare: null,
 }
 
 function isRunActive() {
@@ -118,6 +124,8 @@ function clearActualTrack() {
   state.distanceMeters = 0
   state.elapsedBeforePauseMs = 0
   state.resumedAt = null
+  state.preparedShare = null
+  shareRunStatus.textContent = ''
 }
 
 function drawSelectedRoute(route) {
@@ -172,8 +180,12 @@ function updateRunMetrics() {
 }
 
 function updateRunControls() {
+  const finished = state.runStatus === 'finished'
   pauseButton.disabled = !['running', 'paused'].includes(state.runStatus)
   finishButton.disabled = !isRunActive()
+  pauseButton.hidden = finished
+  finishButton.hidden = finished
+  shareRunButton.hidden = !finished
   pauseButton.textContent = state.runStatus === 'paused' ? 'Reprendre' : 'Pause'
   followCheckbox.checked = state.followPosition
   gpsOriginButton.disabled = isRunActive() || state.plannerBusy
@@ -360,9 +372,39 @@ function finishRun() {
   state.resumedAt = null
   state.runStatus = 'finished'
   stopGpsWatch()
+  const completedAt = new Date().toISOString()
+  const completion = recordSessionCompletion({
+    userId: currentUserId,
+    title: state.selectedRoute?.titre || 'Course libre',
+    completedAt,
+    durationSeconds: Math.round(state.elapsedBeforePauseMs / 1000),
+    distanceKm: state.distanceMeters / 1000,
+  })
+  state.preparedShare = prepareShareSummary({
+    ...completion,
+    stats: getGamificationStats(new Date(), currentUserId),
+  })
   updateRunMetrics()
   updateRunControls()
   setGpsStatus(`Course terminée · ${(state.distanceMeters / 1000).toLocaleString('fr-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} km parcourus.`, 'success')
+}
+
+async function shareFinishedRun() {
+  if (!state.preparedShare) return
+  shareRunButton.disabled = true
+  shareRunButton.textContent = 'Préparation…'
+  shareRunStatus.textContent = ''
+  try {
+    const result = await sharePreparedSummary(state.preparedShare)
+    shareRunStatus.textContent = result.message
+    shareRunStatus.className = 'share-status success'
+  } catch (error) {
+    shareRunStatus.textContent = error.message || 'Le partage est indisponible sur cet appareil.'
+    shareRunStatus.className = 'share-status error'
+  } finally {
+    shareRunButton.disabled = false
+    shareRunButton.textContent = '↗ Partager mon bilan'
+  }
 }
 
 async function planRoutesFromOrigin(origin, label) {
@@ -543,6 +585,7 @@ followCheckbox.addEventListener('change', () => {
 })
 pauseButton.addEventListener('click', togglePause)
 finishButton.addEventListener('click', finishRun)
+shareRunButton.addEventListener('click', shareFinishedRun)
 window.addEventListener('beforeunload', stopGpsWatch)
 
 async function start() {
@@ -552,6 +595,7 @@ async function start() {
     window.location.replace('/admin.html')
     return
   }
+  currentUserId = user.id
   mountNavigation(user)
   try {
     initializeMap()

@@ -230,6 +230,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .progress-track { height: .45rem; overflow: hidden; border-radius: 999px; background: var(--border); }
 .progress-track span { width: 0; height: 100%; display: block; border-radius: inherit; background: var(--green-700); transition: width .25s ease; }
 .run-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .65rem; }
+.share-run-button { grid-column: 1 / -1; }
+.share-status { min-height: 1rem; margin: 0; color: var(--muted); font-size: .72rem; line-height: 1.4; text-align: center; }
+.share-status:empty { display: none; }
+.share-status.success { color: var(--green-700); }
+.share-status.error { color: var(--danger); }
 
 .button {
   min-height: 2.75rem;
@@ -362,10 +367,9 @@ input, select, textarea { width: 100%; padding: .75rem; border: 1px solid var(--
 .status-completed { color: var(--green-800); background: var(--accent-soft); }
 
 .engagement-section { margin: 3rem 0 0; padding-top: 1.7rem; border-top: 1px solid var(--border); }
-.engagement-heading { display: flex; align-items: end; justify-content: space-between; gap: .8rem; margin-bottom: .7rem; }
+.engagement-heading { margin-bottom: .7rem; }
 .engagement-heading h2 { margin-bottom: 0; font-size: 1.25rem; }
 .engagement-heading .eyebrow { margin-bottom: .25rem; font-size: .68rem; }
-.engagement-heading > p { max-width: 20rem; margin-bottom: 0; color: var(--muted); font-size: .72rem; text-align: right; }
 .game-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; }
 .game-stat { display: flex; align-items: center; gap: .6rem; padding: .8rem; border-radius: .85rem; background: var(--surface); box-shadow: none; }
 .game-stat > div { min-width: 0; display: grid; gap: .1rem; }
@@ -475,6 +479,7 @@ input, select, textarea { width: 100%; padding: .75rem; border: 1px solid var(--
 .completion-card { justify-items: center; text-align: center; }
 .completion-card .completion-icon { width: 4rem; aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; color: var(--button-text); background: var(--green-700); font-size: 1.8rem; font-weight: 950; }
 .completion-card .eyebrow, .completion-card h1, .completion-card p { margin-bottom: 0; }
+.completion-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .65rem; }
 .history-wellness { padding: 1rem; border: 1px solid var(--border); border-radius: .9rem; background: var(--accent-soft); }
 .history-wellness .eyebrow { margin-bottom: .7rem; }
 .history-wellness > div { display: flex; flex-wrap: wrap; gap: .6rem 1.2rem; }
@@ -614,8 +619,6 @@ th { color: var(--muted); font-size: .75rem; text-transform: uppercase; }
   .weather-card { grid-template-columns: auto minmax(0, 1fr) auto; padding: .7rem .8rem; }
   .weather-advice-inline { flex-basis: 100%; }
   .metrics { grid-template-columns: 1fr; }
-  .engagement-heading { align-items: flex-start; flex-direction: column; }
-  .engagement-heading > p { text-align: left; }
   .game-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .settings-card { grid-template-columns: auto 1fr; }
   .settings-card .reminder-settings-controls, .settings-card .reminder-status { grid-column: 1 / -1; }
@@ -641,6 +644,7 @@ th { color: var(--muted); font-size: .75rem; text-transform: uppercase; }
   .post-session-heading { flex-direction: column; }
   .post-session-actions { grid-template-columns: 1fr; }
   .post-session-actions .text-button { min-height: 2.75rem; }
+  .completion-actions { width: 100%; display: grid; grid-template-columns: 1fr; }
   .active-heading { flex-direction: column; }
   .admin-grid { grid-template-columns: 1fr; }
   .admin-form { position: static; }
