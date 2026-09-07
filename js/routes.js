@@ -24,6 +24,8 @@ const addressForm = document.querySelector('#address-form')
 const addressInput = document.querySelector('#start-address')
 const addressButton = document.querySelector('#search-address')
 const originStatus = document.querySelector('#origin-status')
+const mapTools = document.querySelector('.map-tools')
+const runTracker = document.querySelector('#run-tracker')
 
 // État unique de la sortie : la trace GPS n'est jamais persistée ni envoyée à l'API JCPMF.
 const state = {
@@ -65,7 +67,7 @@ function renderRoutes() {
   if (!state.routes.length) {
     routesList.innerHTML = state.plannerBusy
       ? '<p class="loading">Calcul des chemins et du dénivelé…</p>'
-      : '<p class="route-empty">Localisez-vous ou indiquez une adresse pour recevoir trois propositions.</p>'
+      : '<p class="route-empty">Définissez un départ pour afficher vos parcours.</p>'
     return
   }
   routesList.innerHTML = state.routes.map((route) => {
@@ -92,6 +94,7 @@ function setOriginStatus(text, type = '') {
 function setGpsStatus(text, type = '') {
   gpsStatus.textContent = text
   gpsStatus.className = `gps-status ${type}`.trim()
+  gpsStatus.hidden = !text
 }
 
 function removeMapLayer(layer) {
@@ -177,6 +180,8 @@ function updateRunControls() {
   locateButton.disabled = state.plannerBusy
   addressInput.disabled = isRunActive() || state.plannerBusy
   addressButton.disabled = isRunActive() || state.plannerBusy
+  mapTools.hidden = !isRunActive() && !state.lastPosition
+  runTracker.hidden = !state.selectedRoute
   renderRoutes()
 }
 
