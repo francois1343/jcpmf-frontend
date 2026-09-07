@@ -92,7 +92,7 @@ export function mountNavigation(user) {
         ${user.role === 'admin'
           ? `<a class="nav-action nav-action-admin" href="/admin.html"><span class="nav-action-icon">${navigationIcons.admin}</span><span>Administration</span></a>`
           : `<a class="nav-action nav-action-home nav-action-icon-only" href="/index.html" aria-label="Accueil" title="Accueil"><span class="nav-action-icon">${navigationIcons.home}</span></a>
-             <a class="nav-action nav-action-routes" href="/routes.html"><span class="nav-action-icon">${navigationIcons.routes}</span><span>Parcours</span></a>
+             <a class="nav-action nav-action-routes nav-action-icon-only" href="/routes.html" aria-label="Parcours" title="Parcours"><span class="nav-action-icon">${navigationIcons.routes}</span></a>
              <a class="nav-action nav-action-profile nav-action-icon-only" href="/profile.html" aria-label="Mon profil" title="Mon profil"><span class="nav-action-icon">${navigationIcons.profile}</span></a>`}
         <span class="nav-control-divider" aria-hidden="true"></span>
         <button class="nav-action nav-action-logout nav-action-icon-only" type="button" data-logout aria-label="Se déconnecter" title="Se déconnecter"><span class="nav-action-icon">${navigationIcons.logout}</span></button>
