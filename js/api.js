@@ -1,4 +1,5 @@
 import { getApiBase } from './config.js'
+import { DEMO_TOKEN, DEMO_USER, demoApi } from './demo-api.js'
 
 const TOKEN_KEY = 'jcpmf_token'
 const USER_KEY = 'jcpmf_user'
@@ -25,9 +26,15 @@ export function clearSession() {
   localStorage.removeItem(USER_KEY)
 }
 
+export function startDemoSession() {
+  saveSession({ token: DEMO_TOKEN, user: DEMO_USER })
+  return DEMO_USER
+}
+
 export async function api(path, options = {}) {
   const headers = new Headers(options.headers || {})
   const requestToken = getToken()
+  if (requestToken === DEMO_TOKEN) return demoApi(path, options)
   if (requestToken) headers.set('Authorization', `Bearer ${requestToken}`)
   if (options.body && !(options.body instanceof FormData)) headers.set('Content-Type', 'application/json')
 

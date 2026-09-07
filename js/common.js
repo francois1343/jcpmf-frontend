@@ -85,7 +85,7 @@ export function mountNavigation(user) {
         <img src="/images/image.png" alt="Je cours pour ma forme">
       </a>
       <div class="nav-actions">
-        <span class="nav-identity"><span class="nav-avatar" data-user-avatar aria-hidden="true"></span><span class="nav-user">${escapeHtml(user.username)}</span></span>
+        <span class="nav-identity"><span class="nav-avatar" data-user-avatar aria-hidden="true"></span><span class="nav-user">${escapeHtml(user.username)}</span>${user.demo ? '<span class="nav-demo-badge">Démo</span>' : ''}</span>
         ${user.role === 'admin'
           ? `<a class="nav-action nav-action-admin" href="/admin.html"><span class="nav-action-icon">${navigationIcons.admin}</span><span>Administration</span></a>`
           : `<a class="nav-action nav-action-routes" href="/routes.html"><span class="nav-action-icon">${navigationIcons.routes}</span><span>Parcours</span></a>

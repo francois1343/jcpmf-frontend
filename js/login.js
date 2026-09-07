@@ -1,4 +1,4 @@
-import { login } from './api.js'
+import { login, startDemoSession } from './api.js'
 import { redirectAuthenticatedUser, setLoading, showMessage } from './common.js'
 
 const form = document.querySelector('#login-form')
@@ -19,6 +19,11 @@ form.addEventListener('submit', async (event) => {
     showMessage(message, error.message)
     setLoading(button, false)
   }
+})
+
+document.querySelector('#start-demo').addEventListener('click', () => {
+  startDemoSession()
+  window.location.replace('/index.html')
 })
 
 redirectAuthenticatedUser()
