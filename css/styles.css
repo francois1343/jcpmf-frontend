@@ -65,10 +65,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 .brand { display: inline-flex; align-items: center; gap: .45rem; flex: 0 0 auto; text-decoration: none; }
 .brand img { width: 8.5rem; height: 3rem; display: block; object-fit: contain; }
-.brand-home-hint { display: inline-flex; align-items: center; gap: .3rem; padding: .34rem .48rem; border: 1px solid color-mix(in srgb, var(--green-700) 25%, var(--border)); border-radius: .6rem; color: var(--green-700); background: color-mix(in srgb, var(--green-700) 7%, var(--surface)); font-size: .66rem; font-weight: 850; line-height: 1; transition: border-color .16s ease, background-color .16s ease; }
-.brand:hover .brand-home-hint { border-color: color-mix(in srgb, var(--green-700) 48%, var(--border)); background: color-mix(in srgb, var(--green-700) 13%, var(--surface)); }
-.brand-home-icon { width: .8rem; height: .8rem; display: grid; place-items: center; }
-.brand-home-icon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.brand-home-button { width: 2.1rem; aspect-ratio: 1; display: grid; place-items: center; padding: .55rem; border: 1px solid color-mix(in srgb, var(--green-700) 25%, var(--border)); border-radius: .65rem; color: var(--green-700); background: color-mix(in srgb, var(--green-700) 7%, var(--surface)); transition: border-color .16s ease, background-color .16s ease; }
+.brand:hover .brand-home-button { border-color: color-mix(in srgb, var(--green-700) 48%, var(--border)); background: color-mix(in srgb, var(--green-700) 13%, var(--surface)); }
+.brand-home-button svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 .nav-actions { display: flex; align-items: center; gap: .45rem; }
 .nav-user { max-width: 8rem; overflow: hidden; color: var(--muted); font-size: .82rem; text-overflow: ellipsis; white-space: nowrap; }
 .nav-identity { display: inline-flex; align-items: center; gap: .55rem; }
@@ -599,10 +598,10 @@ th { color: var(--muted); font-size: .75rem; text-transform: uppercase; }
   .app-nav, .nav-actions, .page-heading, .section-tools, .profile-header { align-items: stretch; flex-direction: column; }
   .app-nav { position: static; gap: .6rem; padding-block: .6rem .75rem; }
   .brand { align-self: center; }
-  .brand-home-hint { padding: .32rem .44rem; }
   .nav-actions { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .45rem; }
   .nav-identity { grid-column: 1; justify-self: start; }
   .nav-action { width: 100%; }
+  .nav-action-icon-only { width: 2.35rem; }
   .nav-action-logout { grid-column: 2; grid-row: 1; justify-self: end; width: 2.35rem; }
   .install-popup { right: 1rem; }
   .routes-layout { grid-template-columns: 1fr; }

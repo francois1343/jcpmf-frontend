@@ -87,14 +87,14 @@ export function mountNavigation(user) {
     <nav class="app-nav">
       <a class="brand" href="${homePath}" aria-label="Retour à l’accueil">
         <img src="/images/image.png" alt="Je cours pour ma forme">
-        ${showHomeHint ? `<span class="brand-home-hint"><span class="brand-home-icon" aria-hidden="true">${navigationIcons.home}</span>Accueil</span>` : ''}
+        ${showHomeHint ? `<span class="brand-home-button" aria-hidden="true">${navigationIcons.home}</span>` : ''}
       </a>
       <div class="nav-actions">
         <span class="nav-identity"><span class="nav-avatar" data-user-avatar aria-hidden="true"></span><span class="nav-user">${escapeHtml(user.username)}</span>${user.demo ? '<span class="nav-demo-badge">Démo</span>' : ''}</span>
         ${user.role === 'admin'
           ? `<a class="nav-action nav-action-admin" href="/admin.html"><span class="nav-action-icon">${navigationIcons.admin}</span><span>Administration</span></a>`
           : `<a class="nav-action nav-action-routes" href="/routes.html"><span class="nav-action-icon">${navigationIcons.routes}</span><span>Parcours</span></a>
-             <a class="nav-action nav-action-profile" href="/profile.html"><span class="nav-action-icon">${navigationIcons.profile}</span><span>Mon profil</span></a>`}
+             <a class="nav-action nav-action-profile nav-action-icon-only" href="/profile.html" aria-label="Mon profil" title="Mon profil"><span class="nav-action-icon">${navigationIcons.profile}</span></a>`}
         <button class="nav-action nav-action-logout nav-action-icon-only" type="button" data-logout aria-label="Se déconnecter" title="Se déconnecter"><span class="nav-action-icon">${navigationIcons.logout}</span></button>
       </div>
     </nav>
