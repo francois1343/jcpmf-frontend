@@ -82,19 +82,19 @@ export function mountNavigation(user) {
   if (!target) return
   const homePath = user.role === 'admin' ? '/admin.html' : '/index.html'
   const currentPath = window.location.pathname === '/' ? '/index.html' : window.location.pathname
-  const showHomeHint = currentPath !== homePath
   target.innerHTML = `
     <nav class="app-nav">
-      <a class="brand" href="${homePath}" aria-label="Retour à l’accueil">
+      <a class="brand" href="${homePath}" aria-label="JCPMF — Accueil">
         <img src="/images/image.png" alt="Je cours pour ma forme">
-        ${showHomeHint ? `<span class="brand-home-button" aria-hidden="true">${navigationIcons.home}</span>` : ''}
       </a>
-      <div class="nav-actions">
-        <span class="nav-identity"><span class="nav-avatar" data-user-avatar aria-hidden="true"></span><span class="nav-user">${escapeHtml(user.username)}</span>${user.demo ? '<span class="nav-demo-badge">Démo</span>' : ''}</span>
+      <span class="nav-identity"><span class="nav-avatar" data-user-avatar aria-hidden="true"></span><span class="nav-user">${escapeHtml(user.username)}</span>${user.demo ? '<span class="nav-demo-badge">Démo</span>' : ''}</span>
+      <div class="nav-controls">
         ${user.role === 'admin'
           ? `<a class="nav-action nav-action-admin" href="/admin.html"><span class="nav-action-icon">${navigationIcons.admin}</span><span>Administration</span></a>`
-          : `<a class="nav-action nav-action-routes" href="/routes.html"><span class="nav-action-icon">${navigationIcons.routes}</span><span>Parcours</span></a>
+          : `<a class="nav-action nav-action-home nav-action-icon-only" href="/index.html" aria-label="Accueil" title="Accueil"><span class="nav-action-icon">${navigationIcons.home}</span></a>
+             <a class="nav-action nav-action-routes" href="/routes.html"><span class="nav-action-icon">${navigationIcons.routes}</span><span>Parcours</span></a>
              <a class="nav-action nav-action-profile nav-action-icon-only" href="/profile.html" aria-label="Mon profil" title="Mon profil"><span class="nav-action-icon">${navigationIcons.profile}</span></a>`}
+        <span class="nav-control-divider" aria-hidden="true"></span>
         <button class="nav-action nav-action-logout nav-action-icon-only" type="button" data-logout aria-label="Se déconnecter" title="Se déconnecter"><span class="nav-action-icon">${navigationIcons.logout}</span></button>
       </div>
     </nav>
@@ -110,7 +110,7 @@ export function mountNavigation(user) {
     </aside>`
   renderProfileAvatar(target.querySelector('[data-user-avatar]'), user.username)
   target.querySelectorAll('.nav-action[href]').forEach((link) => {
-    if (new URL(link.href).pathname === window.location.pathname) link.setAttribute('aria-current', 'page')
+    if (new URL(link.href).pathname === currentPath) link.setAttribute('aria-current', 'page')
   })
   setupInstallButtons()
   target.querySelector('[data-logout]').addEventListener('click', () => {

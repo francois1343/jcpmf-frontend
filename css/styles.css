@@ -54,23 +54,20 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   top: 0;
   z-index: 20;
   min-height: 4.2rem;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  gap: .75rem 1rem;
   padding: .75rem max(1rem, calc((100vw - 72rem) / 2));
   border-bottom: 1px solid var(--border);
   background: var(--nav-background);
   backdrop-filter: blur(12px);
 }
-.brand { display: inline-flex; align-items: center; gap: .45rem; flex: 0 0 auto; text-decoration: none; }
+.brand { display: inline-flex; align-items: center; flex: 0 0 auto; text-decoration: none; }
 .brand img { width: 8.5rem; height: 3rem; display: block; object-fit: contain; }
-.brand-home-button { width: 2.1rem; aspect-ratio: 1; display: grid; place-items: center; padding: .55rem; border: 1px solid color-mix(in srgb, var(--green-700) 25%, var(--border)); border-radius: .65rem; color: var(--green-700); background: color-mix(in srgb, var(--green-700) 7%, var(--surface)); transition: border-color .16s ease, background-color .16s ease; }
-.brand:hover .brand-home-button { border-color: color-mix(in srgb, var(--green-700) 48%, var(--border)); background: color-mix(in srgb, var(--green-700) 13%, var(--surface)); }
-.brand-home-button svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
-.nav-actions { display: flex; align-items: center; gap: .45rem; }
+.nav-controls { display: flex; align-items: center; gap: .22rem; padding: .25rem; border: 1px solid var(--border); border-radius: .9rem; background: var(--surface-soft); box-shadow: 0 5px 18px rgb(18 67 39 / 5%); }
 .nav-user { max-width: 8rem; overflow: hidden; color: var(--muted); font-size: .82rem; text-overflow: ellipsis; white-space: nowrap; }
-.nav-identity { display: inline-flex; align-items: center; gap: .55rem; }
+.nav-identity { justify-self: end; display: inline-flex; align-items: center; gap: .5rem; }
 .nav-demo-badge { padding: .2rem .35rem; border-radius: 999px; color: var(--green-800); background: var(--accent-soft); font-size: .58rem; font-weight: 900; text-transform: uppercase; }
 .nav-avatar { width: 2.35rem; aspect-ratio: 1; flex: 0 0 auto; font-size: .72rem; }
 .nav-avatar, .profile-avatar { overflow: hidden; display: grid; place-items: center; border-radius: 50%; color: white; background: linear-gradient(135deg, var(--green-800), #7adba0); font-weight: 950; }
@@ -84,10 +81,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   justify-content: center;
   gap: .42rem;
   padding: .48rem .7rem;
-  border: 1px solid color-mix(in srgb, var(--nav-action-color) 24%, var(--border));
-  border-radius: .72rem;
+  border: 1px solid transparent;
+  border-radius: .65rem;
   color: var(--nav-action-color);
-  background: color-mix(in srgb, var(--nav-action-color) 8%, var(--surface));
+  background: transparent;
   font-size: .76rem;
   font-weight: 850;
   line-height: 1;
@@ -97,19 +94,21 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   transition: transform .16s ease, border-color .16s ease, background-color .16s ease, box-shadow .16s ease;
 }
 .nav-action:hover {
-  border-color: color-mix(in srgb, var(--nav-action-color) 48%, var(--border));
-  background: color-mix(in srgb, var(--nav-action-color) 14%, var(--surface));
+  border-color: color-mix(in srgb, var(--nav-action-color) 30%, var(--border));
+  background: color-mix(in srgb, var(--nav-action-color) 10%, var(--surface));
   transform: translateY(-1px);
 }
 .nav-action[aria-current="page"] {
-  border-color: color-mix(in srgb, var(--nav-action-color) 56%, var(--border));
-  background: color-mix(in srgb, var(--nav-action-color) 17%, var(--surface));
-  box-shadow: inset 0 -2px 0 var(--nav-action-color);
+  border-color: color-mix(in srgb, var(--nav-action-color) 38%, var(--border));
+  background: color-mix(in srgb, var(--nav-action-color) 14%, var(--surface));
+  box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--nav-action-color) 78%, transparent);
 }
 .nav-action-icon { width: .95rem; height: .95rem; flex: 0 0 auto; display: grid; place-items: center; }
 .nav-action-icon svg { width: 100%; height: 100%; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 .nav-action-admin .nav-action-icon svg { fill: currentColor; stroke: none; }
 .nav-action-icon-only { width: 2.35rem; padding: .48rem; }
+.nav-control-divider { width: 1px; height: 1.4rem; margin: 0 .12rem; background: var(--border); }
+.nav-action-home { --nav-action-color: var(--green-700); }
 .nav-action-routes { --nav-action-color: #24748a; }
 .nav-action-profile, .nav-action-admin { --nav-action-color: #70539a; }
 .nav-action-logout { --nav-action-color: #a14c45; }
@@ -595,14 +594,13 @@ th { color: var(--muted); font-size: .75rem; text-transform: uppercase; }
 }
 
 @media (max-width: 760px) {
-  .app-nav, .nav-actions, .page-heading, .section-tools, .profile-header { align-items: stretch; flex-direction: column; }
-  .app-nav { position: static; gap: .6rem; padding-block: .6rem .75rem; }
-  .brand { align-self: center; }
-  .nav-actions { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .45rem; }
-  .nav-identity { grid-column: 1; justify-self: start; }
-  .nav-action { width: 100%; }
-  .nav-action-icon-only { width: 2.35rem; }
-  .nav-action-logout { grid-column: 2; grid-row: 1; justify-self: end; width: 2.35rem; }
+  .page-heading, .section-tools, .profile-header { align-items: stretch; flex-direction: column; }
+  .app-nav { position: static; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem; padding-block: .55rem .65rem; }
+  .brand { justify-self: start; }
+  .brand img { width: 7.5rem; height: 2.65rem; }
+  .nav-identity { justify-self: end; }
+  .nav-user { display: none; }
+  .nav-controls { grid-column: 1 / -1; justify-self: center; }
   .install-popup { right: 1rem; }
   .routes-layout { grid-template-columns: 1fr; }
   .route-origin-card { padding: 1rem; }
