@@ -63,8 +63,12 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   background: var(--nav-background);
   backdrop-filter: blur(12px);
 }
-.brand { display: inline-flex; align-items: center; flex: 0 0 auto; text-decoration: none; }
+.brand { display: inline-flex; align-items: center; gap: .45rem; flex: 0 0 auto; text-decoration: none; }
 .brand img { width: 8.5rem; height: 3rem; display: block; object-fit: contain; }
+.brand-home-hint { display: inline-flex; align-items: center; gap: .3rem; padding: .34rem .48rem; border: 1px solid color-mix(in srgb, var(--green-700) 25%, var(--border)); border-radius: .6rem; color: var(--green-700); background: color-mix(in srgb, var(--green-700) 7%, var(--surface)); font-size: .66rem; font-weight: 850; line-height: 1; transition: border-color .16s ease, background-color .16s ease; }
+.brand:hover .brand-home-hint { border-color: color-mix(in srgb, var(--green-700) 48%, var(--border)); background: color-mix(in srgb, var(--green-700) 13%, var(--surface)); }
+.brand-home-icon { width: .8rem; height: .8rem; display: grid; place-items: center; }
+.brand-home-icon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 .nav-actions { display: flex; align-items: center; gap: .45rem; }
 .nav-user { max-width: 8rem; overflow: hidden; color: var(--muted); font-size: .82rem; text-overflow: ellipsis; white-space: nowrap; }
 .nav-identity { display: inline-flex; align-items: center; gap: .55rem; }
@@ -543,11 +547,16 @@ input, select, textarea { width: 100%; padding: .75rem; border: 1px solid var(--
 .profile-data-status.success { color: var(--green-700); }
 .profile-data-status.error { color: var(--danger); }
 .avatar-status:empty, .profile-data-status:empty, .appearance-status:empty, .export-status:empty { display: none; }
-.profile-settings-trigger-row { display: flex; justify-content: flex-end; margin: -.25rem 0 .55rem; }
-.profile-settings-trigger { min-height: 2rem; display: inline-flex; align-items: center; gap: .35rem; padding: .35rem .55rem; border: 1px solid var(--border); border-radius: .6rem; color: var(--muted); background: transparent; font-size: .7rem; font-weight: 800; cursor: pointer; transition: color .16s ease, border-color .16s ease, background-color .16s ease; }
-.profile-settings-trigger:hover { border-color: var(--control-border); color: var(--green-700); background: var(--surface); }
-.profile-settings-trigger > span:first-child { width: .82rem; height: .82rem; flex: 0 0 auto; display: grid; place-items: center; }
-.profile-settings-trigger svg { width: .82rem; height: .82rem; display: block; fill: currentColor; }
+.profile-kicker-row { display: flex; align-items: center; gap: .55rem; margin-bottom: .15rem; }
+.profile-kicker-row .eyebrow { margin: 0; }
+.profile-settings-trigger { width: 2.75rem; aspect-ratio: 1; flex: 0 0 auto; display: grid; place-items: center; padding: 0; border: 1px solid color-mix(in srgb, #70539a 38%, var(--border)); border-radius: .78rem; color: #70539a; background: color-mix(in srgb, #70539a 12%, var(--surface)); box-shadow: 0 4px 12px rgb(75 52 108 / 10%); cursor: pointer; transition: color .16s ease, border-color .16s ease, background-color .16s ease, transform .16s ease, box-shadow .16s ease; }
+.profile-settings-trigger:hover { border-color: color-mix(in srgb, #70539a 65%, var(--border)); background: color-mix(in srgb, #70539a 18%, var(--surface)); box-shadow: 0 6px 16px rgb(75 52 108 / 18%); transform: translateY(-1px); }
+.profile-settings-trigger > span { width: 1.3rem; height: 1.3rem; display: grid; place-items: center; }
+.profile-settings-trigger svg { width: 100%; height: 100%; display: block; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+:root[data-theme="dark"] .profile-settings-trigger { color: #c3a4eb; }
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="auto"] .profile-settings-trigger { color: #c3a4eb; }
+}
 .profile-settings-dialog { width: min(44rem, calc(100% - 2rem)); max-height: calc(100dvh - 2rem); overflow: hidden; padding: 0; border: 1px solid var(--border); border-radius: 1rem; color: var(--text); background: var(--surface); box-shadow: 0 24px 80px rgb(8 37 22 / 35%); }
 .profile-settings-dialog::backdrop { background: rgb(8 37 22 / 56%); backdrop-filter: blur(3px); }
 .profile-settings-dialog[open] { display: grid; grid-template-rows: auto minmax(0, 1fr); animation: dialog-enter .18s ease-out; }
@@ -555,7 +564,7 @@ input, select, textarea { width: 100%; padding: .75rem; border: 1px solid var(--
 .profile-settings-dialog-header .eyebrow { margin-bottom: .1rem; font-size: .6rem; }
 .profile-settings-dialog-header h2 { margin: 0; font-size: 1.05rem; }
 .profile-settings-dialog-icon { width: 1.8rem; aspect-ratio: 1; display: grid; place-items: center; border-radius: .55rem; color: var(--green-700); background: var(--accent-soft); }
-.profile-settings-dialog-icon svg { width: .85rem; height: .85rem; display: block; fill: currentColor; }
+.profile-settings-dialog-icon svg { width: .95rem; height: .95rem; display: block; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
 .profile-settings-dialog-close { width: 2rem; aspect-ratio: 1; padding: 0; border: 0; border-radius: 50%; color: var(--muted); background: transparent; font-size: 1.25rem; cursor: pointer; }
 .profile-settings-dialog-close:hover { color: var(--heading); background: var(--soft-hover); }
 .profile-settings-content { min-height: 0; display: grid; gap: .55rem; overflow-y: auto; padding: .6rem; background: var(--surface-soft); }
@@ -590,6 +599,7 @@ th { color: var(--muted); font-size: .75rem; text-transform: uppercase; }
   .app-nav, .nav-actions, .page-heading, .section-tools, .profile-header { align-items: stretch; flex-direction: column; }
   .app-nav { position: static; gap: .6rem; padding-block: .6rem .75rem; }
   .brand { align-self: center; }
+  .brand-home-hint { padding: .32rem .44rem; }
   .nav-actions { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .45rem; }
   .nav-identity { grid-column: 1; justify-self: start; }
   .nav-action { width: 100%; }

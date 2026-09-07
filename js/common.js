@@ -7,6 +7,7 @@ import { startReminderChecks } from './reminders.js'
 startReminderChecks()
 
 const navigationIcons = {
+  home: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8M5 10v10h14V10M9 20v-6h6v6"/></svg>',
   admin: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>',
   routes: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><path d="M8 6h4a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h7"/></svg>',
   profile: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3"/><path d="M5 20c.8-4.2 3.1-6.3 7-6.3s6.2 2.1 7 6.3"/></svg>',
@@ -79,10 +80,14 @@ export async function redirectAuthenticatedUser() {
 export function mountNavigation(user) {
   const target = document.querySelector('[data-navigation]')
   if (!target) return
+  const homePath = user.role === 'admin' ? '/admin.html' : '/index.html'
+  const currentPath = window.location.pathname === '/' ? '/index.html' : window.location.pathname
+  const showHomeHint = currentPath !== homePath
   target.innerHTML = `
     <nav class="app-nav">
-      <a class="brand" href="${user.role === 'admin' ? '/admin.html' : '/index.html'}" aria-label="JCPMF — Accueil">
+      <a class="brand" href="${homePath}" aria-label="Retour à l’accueil">
         <img src="/images/image.png" alt="Je cours pour ma forme">
+        ${showHomeHint ? `<span class="brand-home-hint"><span class="brand-home-icon" aria-hidden="true">${navigationIcons.home}</span>Accueil</span>` : ''}
       </a>
       <div class="nav-actions">
         <span class="nav-identity"><span class="nav-avatar" data-user-avatar aria-hidden="true"></span><span class="nav-user">${escapeHtml(user.username)}</span>${user.demo ? '<span class="nav-demo-badge">Démo</span>' : ''}</span>

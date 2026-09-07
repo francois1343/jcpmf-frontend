@@ -27,7 +27,7 @@ const profileIcons = {
   follow: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 8.5c0 5-8 10.5-8 10.5S4 13.5 4 8.5A4.5 4.5 0 0 1 12 5a4.5 4.5 0 0 1 8 3.5Z"/></svg>',
   data: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V9m7 10V5m7 14v-7M3 19h18"/></svg>',
   appearance: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16Z"/></svg>',
-  settings: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.43 12.98c.04-.32.07-.65.07-.98s-.03-.66-.07-.98l2.11-1.65a.5.5 0 0 0 .12-.64l-2-3.46a.5.5 0 0 0-.6-.22l-2.49 1a7.4 7.4 0 0 0-1.69-.98l-.38-2.65A.5.5 0 0 0 14 2h-4a.5.5 0 0 0-.5.42l-.38 2.65a7.4 7.4 0 0 0-1.69.98l-2.49-1a.5.5 0 0 0-.6.22l-2 3.46a.5.5 0 0 0 .12.64l2.11 1.65a7.5 7.5 0 0 0 0 1.96l-2.11 1.65a.5.5 0 0 0-.12.64l2 3.46a.5.5 0 0 0 .6.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.04.24.25.42.5.42h4a.5.5 0 0 0 .5-.42l.38-2.65a7.4 7.4 0 0 0 1.69-.98l2.49 1a.5.5 0 0 0 .6-.22l2-3.46a.5.5 0 0 0-.12-.64ZM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7"/></svg>',
+  settings: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.09a2 2 0 0 1 1 1.73v.5a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2Z"/><circle cx="12" cy="12" r="3"/></svg>',
 }
 
 async function load() {
@@ -49,13 +49,16 @@ async function load() {
           <input id="profile-avatar-input" class="visually-hidden" type="file" accept="image/*">
         </label>
       </div>
-      <div class="profile-header-copy"><p class="eyebrow">Espace personnel</p><h1>Mon profil</h1><p class="muted">Votre compte et les réglages du parcours.</p></div>
+      <div class="profile-header-copy">
+        <div class="profile-kicker-row">
+          <p class="eyebrow">Espace personnel</p>
+          <button id="open-profile-settings" class="profile-settings-trigger" type="button" aria-label="Ouvrir les paramètres" title="Paramètres" aria-haspopup="dialog" aria-controls="profile-settings-dialog">
+            <span aria-hidden="true">${profileIcons.settings}</span>
+          </button>
+        </div>
+        <h1>Mon profil</h1><p class="muted">Votre compte et les réglages du parcours.</p>
+      </div>
     </header>
-    <div class="profile-settings-trigger-row">
-      <button id="open-profile-settings" class="profile-settings-trigger" type="button" aria-haspopup="dialog" aria-controls="profile-settings-dialog">
-        <span aria-hidden="true">${profileIcons.settings}</span><span>Paramètres</span>
-      </button>
-    </div>
     <section class="card profile-module profile-photo-card">
       <div><p class="eyebrow">Avatar</p><h2>Votre image</h2><p class="muted">Photo ou illustration, conservée sur cet appareil.</p></div>
       <div class="profile-avatar-actions">
