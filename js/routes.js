@@ -7,6 +7,7 @@ import {
   routeProgress,
 } from './routes-core.js'
 import { createRecommendedRoutes, geocodeAddress } from './route-planner.js'
+import { confirmLocationAccess } from './location-consent.js'
 
 const routesList = document.querySelector('#routes-list')
 const routePanel = document.querySelector('#route-panel')
@@ -292,9 +293,20 @@ function handleGpsError(error) {
   else setGpsStatus(text, 'error')
 }
 
-function startRun(route) {
+async function startRun(route) {
   if (!navigator.geolocation) {
     setGpsStatus('La géolocalisation n’est pas disponible sur cet appareil.', 'error')
+    return
+  }
+  if (isRunActive()) return
+  const locationEnabled = await confirmLocationAccess({
+    scope: 'route-tracking',
+    description: 'Elle permet de suivre votre trace, votre distance et votre allure pendant cette sortie.',
+    details: 'La trace GPS reste sur cet appareil et n’est jamais envoyée au backend JCPMF.',
+    confirmLabel: 'Activer le suivi GPS',
+  })
+  if (!locationEnabled) {
+    setGpsStatus('Suivi GPS non activé. Vous pouvez consulter le parcours sans être localisé·e.', 'warning')
     return
   }
   if (!selectRoute(route, { scroll: true }) || isRunActive()) return
@@ -393,13 +405,24 @@ async function planRoutesFromOrigin(origin, label) {
   }
 }
 
-function requestGpsOrigin() {
+async function requestGpsOrigin() {
   if (isRunActive()) {
     setOriginStatus('Terminez la course en cours avant de changer de départ.', 'error')
     return
   }
   if (!navigator.geolocation) {
     setOriginStatus('La géolocalisation n’est pas disponible sur cet appareil.', 'error')
+    return
+  }
+  const locationEnabled = await confirmLocationAccess({
+    scope: 'route-origin',
+    title: 'Utiliser votre position ?',
+    description: 'Elle sert uniquement à définir le point de départ de vos parcours.',
+    details: 'Seul ce point de départ est transmis aux services cartographiques pour calculer les boucles proposées.',
+    confirmLabel: 'Utiliser ma position',
+  })
+  if (!locationEnabled) {
+    setOriginStatus('Position non utilisée. Vous pouvez entrer une adresse à la place.', 'warning')
     return
   }
   gpsOriginButton.disabled = true
@@ -424,7 +447,7 @@ function requestGpsOrigin() {
   })
 }
 
-function locateRunner() {
+async function locateRunner() {
   if (!navigator.geolocation) {
     setGpsStatus('La géolocalisation n’est pas disponible sur cet appareil.', 'error')
     return
@@ -434,6 +457,17 @@ function locateRunner() {
     return
   }
   if (state.plannerBusy || isRunActive()) return
+  const locationEnabled = await confirmLocationAccess({
+    scope: 'route-locate',
+    title: 'Vous localiser sur la carte ?',
+    description: 'Elle permet de vous placer sur la carte et de proposer des parcours près de vous.',
+    details: 'Votre position n’est pas transmise au backend JCPMF.',
+    confirmLabel: 'Me localiser',
+  })
+  if (!locationEnabled) {
+    setGpsStatus('Position non utilisée. Vous pouvez saisir une adresse pour créer un parcours.', 'warning')
+    return
+  }
   state.plannerBusy = true
   updateRunControls()
   setGpsStatus('Recherche de votre position…')

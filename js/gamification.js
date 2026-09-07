@@ -15,7 +15,12 @@ export function getGamificationData() {
   try {
     const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null')
     if (!parsed || !Array.isArray(parsed.completions)) return emptyData()
-    return { version: 1, completions: parsed.completions.filter(validCompletion) }
+    return {
+      version: 1,
+      completions: parsed.completions
+        .filter(validCompletion)
+        .map((item) => ({ ...item, wellness: normalizeWellness(item.wellness) })),
+    }
   } catch {
     return emptyData()
   }
@@ -24,6 +29,19 @@ export function getGamificationData() {
 function saveGamificationData(data) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
   window.dispatchEvent(new CustomEvent(UPDATE_EVENT, { detail: data }))
+}
+
+export function clearGamificationData(userId = null, { includeLegacy = false } = {}) {
+  if (userId == null) {
+    localStorage.removeItem(STORAGE_KEY)
+    window.dispatchEvent(new CustomEvent(UPDATE_EVENT, { detail: emptyData() }))
+    return
+  }
+  const data = getGamificationData()
+  data.completions = data.completions.filter((item) => (
+    Number(item.userId) !== Number(userId) && !(includeLegacy && item.userId == null)
+  ))
+  saveGamificationData(data)
 }
 
 function dateKey(value) {
@@ -71,12 +89,14 @@ export function recordSessionCompletion(details) {
   const completedAt = details.completedAt || new Date().toISOString()
   const completion = {
     id: details.id || `local-${details.sessionId || 'session'}-${completedAt}`,
+    userId: Number(details.userId) || null,
     sessionId: Number(details.sessionId) || null,
     title: String(details.title || 'Séance'),
     completedAt,
     durationSeconds: Math.max(0, Number(details.durationSeconds) || 0),
     distanceKm: Math.max(0, Number(details.distanceKm) || 0),
     stepsCount: Math.max(0, Number(details.stepsCount) || 0),
+    wellness: normalizeWellness(details.wellness),
   }
   const data = getGamificationData()
   if (!data.completions.some((item) => item.id === completion.id)) {
@@ -87,21 +107,66 @@ export function recordSessionCompletion(details) {
   return completion
 }
 
-export function syncCompletedSessions(plan) {
+function normalizeWellness(wellness) {
+  if (!wellness) return null
+  const energy = Number(wellness.energy)
+  const effort = Number(wellness.effort)
+  const discomfort = ['none', 'light', 'high'].includes(wellness.discomfort) ? wellness.discomfort : null
+  if (!Number.isInteger(energy) || energy < 1 || energy > 5) return null
+  if (!Number.isInteger(effort) || effort < 1 || effort > 5) return null
+  if (!discomfort) return null
+  return { energy, effort, discomfort }
+}
+
+export function getLatestSessionCompletion(sessionId, userId = null) {
+  return [...getGamificationData().completions]
+    .reverse()
+    .find((item) => (
+      Number(item.sessionId) === Number(sessionId)
+      && (userId == null || Number(item.userId) === Number(userId))
+    )) || null
+}
+
+export function syncCompletedSessions(plan, userId = null) {
   const data = getGamificationData()
   let changed = false
+  const planSessions = (plan?.seasons || []).flatMap((season) => (
+    (season.weeks || []).flatMap((week) => week.sessions || [])
+  ))
+  const planSessionIds = new Set(planSessions.map((session) => Number(session.id)))
+  const completedSessionIds = new Set(planSessions
+    .filter((session) => session.status === 'completed')
+    .map((session) => Number(session.id)))
+  const retainedCompletions = data.completions.filter((item) => {
+    const sessionId = Number(item.sessionId)
+    if (!planSessionIds.has(sessionId) || completedSessionIds.has(sessionId)) return true
+    return userId != null && item.userId != null && Number(item.userId) !== Number(userId)
+  })
+  if (retainedCompletions.length !== data.completions.length) {
+    data.completions = retainedCompletions
+    changed = true
+  }
+
   for (const season of plan?.seasons || []) {
     for (const week of season.weeks || []) {
       for (const session of week.sessions || []) {
         if (session.status !== 'completed' || !session.completedAt) continue
         const completedAt = new Date(session.completedAt).getTime()
-        const alreadyKnown = data.completions.some((item) => (
+        const alreadyKnown = data.completions.find((item) => (
           Number(item.sessionId) === Number(session.id)
+          && (userId == null || item.userId == null || Number(item.userId) === Number(userId))
           && Math.abs(new Date(item.completedAt).getTime() - completedAt) < 5 * 60 * 1000
         ))
-        if (alreadyKnown) continue
+        if (alreadyKnown) {
+          if (userId != null && alreadyKnown.userId == null) {
+            alreadyKnown.userId = Number(userId)
+            changed = true
+          }
+          continue
+        }
         data.completions.push({
           id: `import-${session.id}-${session.completedAt}`,
+          userId: Number(userId) || null,
           sessionId: Number(session.id),
           title: session.title,
           completedAt: session.completedAt,
@@ -120,8 +185,10 @@ export function syncCompletedSessions(plan) {
   return changed
 }
 
-export function getGamificationStats(now = new Date()) {
-  const completions = getGamificationData().completions
+export function getGamificationStats(now = new Date(), userId = null) {
+  const completions = getGamificationData().completions.filter((item) => (
+    userId == null || item.userId == null || Number(item.userId) === Number(userId)
+  ))
   const dailyTotals = new Map()
   const dailySessions = new Map()
   const activeDays = new Set()

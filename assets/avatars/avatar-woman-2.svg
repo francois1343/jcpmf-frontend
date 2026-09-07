@@ -1,10 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
-  <title id="title">Avatar femme sur fond violet</title>
-  <circle cx="64" cy="64" r="64" fill="#ebe3f6"/>
-  <path d="M20 128c5-28 20-42 44-42s39 14 44 42" fill="#65508e"/>
-  <path d="M30 60c0-27 14-42 34-42s34 15 34 42v35H30Z" fill="#211c27"/>
-  <circle cx="64" cy="57" r="28" fill="#9d674d"/>
-  <path d="M36 48c5-20 16-29 29-29 15 0 27 10 31 28-12-2-23-8-31-17-7 9-16 15-29 18Z" fill="#211c27"/>
-  <circle cx="53" cy="58" r="2.5" fill="#211c27"/><circle cx="75" cy="58" r="2.5" fill="#211c27"/>
-  <path d="M53 70c7 5 15 5 22 0" fill="none" stroke="#603b31" stroke-width="3" stroke-linecap="round"/>
+  <title id="title">Avatar Horizon, coureuse sur fond violet</title>
+  <defs>
+    <linearGradient id="bg" x1="12" y1="9" x2="116" y2="119" gradientUnits="userSpaceOnUse"><stop stop-color="#f0ebfb"/><stop offset="1" stop-color="#cfc1ed"/></linearGradient>
+    <linearGradient id="shirt" x1="37" y1="90" x2="91" y2="128" gradientUnits="userSpaceOnUse"><stop stop-color="#7760b7"/><stop offset="1" stop-color="#4d3984"/></linearGradient>
+  </defs>
+  <circle cx="64" cy="64" r="64" fill="url(#bg)"/>
+  <path d="M-5 29c24 18 48 19 70 2s45-18 69-2" fill="none" stroke="#fff" stroke-width="7" opacity=".34"/>
+  <circle cx="24" cy="96" r="14" fill="#fff" opacity=".2"/>
+  <path d="M17 128c5-24 22-38 47-38s42 14 47 38" fill="url(#shirt)"/>
+  <path d="M48 94l16 13 16-13-7-8H55Z" fill="#faf8ff" opacity=".96"/>
+  <path d="M54 77h20v18c-6 5-14 5-20 0Z" fill="#825038"/>
+  <circle cx="40" cy="59" r="6" fill="#986247"/><circle cx="88" cy="59" r="6" fill="#986247"/>
+  <path d="M41 47c0-18 9-28 23-28s23 10 23 28v15c0 17-10 27-23 27S41 79 41 62Z" fill="#9d684c"/>
+  <circle cx="41" cy="43" r="10" fill="#211d28"/><circle cx="47" cy="29" r="11" fill="#211d28"/><circle cx="60" cy="23" r="11" fill="#211d28"/><circle cx="74" cy="24" r="11" fill="#211d28"/><circle cx="86" cy="33" r="11" fill="#211d28"/><circle cx="89" cy="47" r="9" fill="#211d28"/>
+  <path d="M42 47c4-18 13-27 26-27 13 0 21 8 25 24-12 1-23-3-32-12-4 7-10 12-19 15Z" fill="#211d28"/>
+  <path d="M47 54c3-2 7-2 10 0m13 0c3-2 7-2 10 0" fill="none" stroke="#56352a" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="53" cy="60" r="2" fill="#211d28"/><circle cx="75" cy="60" r="2" fill="#211d28"/>
+  <path d="M64 60l-2 8 4 1M54 75c7 5 13 5 20 0" fill="none" stroke="#653b31" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M40 113h48" stroke="#ad97e5" stroke-width="3" stroke-linecap="round" opacity=".9"/>
 </svg>

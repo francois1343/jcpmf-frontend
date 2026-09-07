@@ -8,6 +8,7 @@ import {
 } from './reminders.js'
 
 const delays = [1, 2, 3, 5, 7]
+const reminderIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 17h12l-1.5-2.5V10a4.5 4.5 0 0 0-9 0v4.5Zm4 2a2.2 2.2 0 0 0 4 0"/></svg>'
 let settingsTarget = null
 let settingsListenerReady = false
 
@@ -31,11 +32,11 @@ function renderSettings() {
   const settings = getReminderSettings()
   const canEnable = supported() && Notification.permission !== 'denied'
   settingsTarget.innerHTML = `
-    <div class="settings-icon" aria-hidden="true">🔔</div>
+    <div class="settings-icon" aria-hidden="true">${reminderIcon}</div>
     <div class="settings-copy">
       <p class="eyebrow">Application</p>
       <h2>Rappels d’activité</h2>
-      <p class="muted">Choisissez si l’application doit vous relancer après plusieurs jours sans séance.</p>
+      <p class="muted">Recevez un rappel après quelques jours sans séance.</p>
     </div>
     <div class="reminder-settings-controls">
       <label for="profile-reminder-delay">Me prévenir après

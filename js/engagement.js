@@ -5,6 +5,7 @@ import {
 } from './gamification.js'
 
 let currentTarget = null
+let currentUserId = null
 
 function formatBestDay(date) {
   if (!date) return 'Aucune séance'
@@ -14,11 +15,11 @@ function formatBestDay(date) {
 
 function render() {
   if (!currentTarget?.isConnected) return
-  const stats = getGamificationStats()
+  const stats = getGamificationStats(new Date(), currentUserId)
   currentTarget.innerHTML = `
     <div class="engagement-heading">
-      <div><p class="eyebrow">Engagement &amp; gamification</p><h2>Mes statistiques locales</h2></div>
-      <p>Ces données restent sur cet appareil.</p>
+      <div><p class="eyebrow">Mon activité</p><h2>Ma régularité</h2></div>
+      <p>Ces statistiques suivent les séances enregistrées sur cet appareil.</p>
     </div>
     <div class="game-stats">
       <article class="card game-stat"><span class="stat-icon" aria-hidden="true">✓</span><div><strong>${stats.totalSessions}</strong><span>Séances terminées</span></div></article>
@@ -30,7 +31,8 @@ function render() {
 
 subscribeToGamification(render)
 
-export function mountEngagementDashboard(target) {
+export function mountEngagementDashboard(target, userId = null) {
   currentTarget = target
+  currentUserId = userId
   render()
 }

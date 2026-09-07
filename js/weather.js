@@ -1,3 +1,5 @@
+import { confirmLocationAccess, hasLocationAccess } from './location-consent.js'
+
 const OPEN_METEO_ENDPOINT = 'https://api.open-meteo.com/v1/forecast'
 
 export const DEFAULT_WEATHER_LOCATION = {
@@ -93,10 +95,20 @@ export async function fetchCurrentWeather(location, { fetchFn = fetch, timeoutMs
   }
 }
 
-async function loadWeather(force = false) {
+async function loadWeather(force = false, requestLocation = false) {
   if (!force && cachedWeather) return cachedWeather
   if (!force && weatherRequest) return weatherRequest
-  weatherRequest = locateUser()
+  let locationEnabled = await hasLocationAccess('weather')
+  if (requestLocation && !locationEnabled) {
+    locationEnabled = await confirmLocationAccess({
+      scope: 'weather',
+      title: 'Afficher la météo près de vous ?',
+      description: 'Votre position approximative permet d’afficher les conditions météo utiles pour courir.',
+      details: 'Elle est transmise à Open-Meteo pour récupérer la météo. Sans autorisation, les prévisions de Bruxelles sont affichées.',
+      confirmLabel: 'Afficher ma météo locale',
+    })
+  }
+  weatherRequest = (locationEnabled ? locateUser() : Promise.resolve({ ...DEFAULT_WEATHER_LOCATION }))
     .then((location) => fetchCurrentWeather(location))
     .then((weather) => {
       cachedWeather = weather
@@ -114,7 +126,7 @@ function renderLoading(target) {
   target.setAttribute('aria-busy', 'true')
   target.innerHTML = `
     <span class="weather-icon weather-loading" aria-hidden="true">···</span>
-    <div class="weather-copy"><p class="eyebrow">Météo pour courir</p><h2>Recherche des conditions actuelles…</h2><p class="muted">Votre position approximative sert à interroger Open-Meteo ; sinon Bruxelles sera utilisée.</p></div>`
+    <div class="weather-copy"><p class="eyebrow">Météo</p><p class="muted">Recherche des conditions près de vous…</p></div>`
 }
 
 function renderWeather(target, weather) {
@@ -124,34 +136,34 @@ function renderWeather(target, weather) {
   target.innerHTML = `
     <span class="weather-icon" aria-hidden="true">${condition.icon}</span>
     <div class="weather-copy">
-      <p class="eyebrow">Météo pour courir · ${weather.location.label}${fallbackLabel}</p>
+      <p class="eyebrow">Météo · ${weather.location.label}${fallbackLabel} · <a class="weather-source" href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a></p>
       <div class="weather-current"><strong>${formatNumber(weather.temperature_2m)}°</strong><h2>${condition.label}</h2></div>
       <div class="weather-details" aria-label="Détails météo">
         <span>Ressenti ${formatNumber(weather.apparent_temperature)}°</span>
         <span>Vent ${formatNumber(weather.wind_speed_10m)} km/h</span>
-        <span>Rafales ${formatNumber(weather.wind_gusts_10m)} km/h</span>
+        <span class="weather-advice-inline">${getRunningAdvice(weather)}</span>
       </div>
     </div>
-    <button class="weather-refresh" type="button" data-weather-refresh aria-label="Actualiser la météo">↻ <span>Actualiser</span></button>
-    <p class="weather-advice">${getRunningAdvice(weather)}</p>
-    <a class="weather-source" href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Données Open-Meteo</a>`
+    ${weather.location.isFallback
+      ? '<button class="weather-refresh" type="button" data-weather-locate aria-label="Afficher la météo locale" title="Afficher la météo locale">⌖</button>'
+      : '<button class="weather-refresh" type="button" data-weather-refresh aria-label="Actualiser la météo">↻</button>'}`
 }
 
 function renderError(target) {
   target.removeAttribute('aria-busy')
   target.innerHTML = `
     <span class="weather-icon" aria-hidden="true">🌡️</span>
-    <div class="weather-copy"><p class="eyebrow">Météo pour courir</p><h2>Météo temporairement indisponible</h2><p class="muted">Vérifiez votre connexion puis réessayez.</p></div>
-    <button class="weather-refresh" type="button" data-weather-refresh>↻ <span>Réessayer</span></button>`
+    <div class="weather-copy"><p class="eyebrow">Météo</p><p class="muted">Temporairement indisponible.</p></div>
+    <button class="weather-refresh" type="button" data-weather-refresh aria-label="Réessayer">↻</button>`
 }
 
 export function mountWeatherWidget(target) {
   if (!target) return
 
-  const update = async (force = false) => {
+  const update = async (force = false, requestLocation = false) => {
     renderLoading(target)
     try {
-      renderWeather(target, await loadWeather(force))
+      renderWeather(target, await loadWeather(force, requestLocation))
     } catch {
       renderError(target)
     }
@@ -159,6 +171,7 @@ export function mountWeatherWidget(target) {
 
   target.addEventListener('click', (event) => {
     if (event.target.closest('[data-weather-refresh]')) update(true)
+    if (event.target.closest('[data-weather-locate]')) update(true, true)
   })
   update()
 }

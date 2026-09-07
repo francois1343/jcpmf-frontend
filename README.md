@@ -12,6 +12,10 @@ Ouvrir ensuite `http://127.0.0.1:3000`.
 
 Pour faire fonctionner la connexion, démarrer aussi le dépôt `jcpmf-backend` sur le port `4000`.
 
+## Tester depuis un mobile
+
+Connecter le téléphone et l’ordinateur au même Wi-Fi, puis ouvrir `http://ADRESSE_IP_DU_MAC:3000` sur le téléphone. En accès HTTP local, le frontend utilise automatiquement `http://ADRESSE_IP_DU_MAC:4000/api`. L’API doit être démarrée avec `ALLOW_LAN_ORIGINS=true` dans son fichier `.env`.
+
 ## Déploiement Vercel
 
 Importer ce dépôt seul dans Vercel, sans définir de **Root Directory**.

@@ -6,12 +6,12 @@ const JPEG_QUALITY = .82
 const MAX_STORED_LENGTH = 1_200_000
 
 export const PRESET_AVATARS = Object.freeze([
-  { path: '/assets/avatars/avatar-man-1.svg', label: 'Homme 1' },
-  { path: '/assets/avatars/avatar-man-2.svg', label: 'Homme 2' },
-  { path: '/assets/avatars/avatar-woman-1.svg', label: 'Femme 1' },
-  { path: '/assets/avatars/avatar-woman-2.svg', label: 'Femme 2' },
-  { path: '/assets/avatars/avatar-runner-neutral.svg', label: 'Neutre 1' },
-  { path: '/assets/avatars/avatar-runner-neutral-2.svg', label: 'Neutre 2' },
+  { path: '/assets/avatars/avatar-man-1.svg', label: 'Élan' },
+  { path: '/assets/avatars/avatar-man-2.svg', label: 'Tempo' },
+  { path: '/assets/avatars/avatar-woman-1.svg', label: 'Aube' },
+  { path: '/assets/avatars/avatar-woman-2.svg', label: 'Horizon' },
+  { path: '/assets/avatars/avatar-runner-neutral.svg', label: 'Piste' },
+  { path: '/assets/avatars/avatar-runner-neutral-2.svg', label: 'Énergie' },
 ])
 const presetPaths = new Set(PRESET_AVATARS.map((avatar) => avatar.path))
 

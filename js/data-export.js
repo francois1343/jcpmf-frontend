@@ -62,6 +62,9 @@ export function completedSessionsToCsv(completions = []) {
     ["Durée d'effort", (session) => formatAccumulatedTime(session.durationSeconds)],
     ['Distance (km)', (session) => decimalForCsv(session.distanceKm)],
     ['Pas', (session) => Math.max(0, Math.round(Number(session.stepsCount) || 0))],
+    ['Forme après séance (1-5)', (session) => session.wellness?.energy ?? ''],
+    ['Effort ressenti (1-5)', (session) => session.wellness?.effort ?? ''],
+    ['Gêne inhabituelle', (session) => ({ none: 'Aucune', light: 'Légère', high: 'Importante' })[session.wellness?.discomfort] || ''],
   ]
   const rows = [...completions]
     .sort((left, right) => new Date(right.completedAt) - new Date(left.completedAt))
@@ -86,8 +89,10 @@ export function downloadBlob(blob, filename, {
   return filename
 }
 
-export function exportCompletedSessionsCsv(now = new Date()) {
-  const completions = getGamificationData().completions
+export function exportCompletedSessionsCsv(now = new Date(), userId = null) {
+  const completions = getGamificationData().completions.filter((item) => (
+    userId == null || item.userId == null || Number(item.userId) === Number(userId)
+  ))
   if (!completions.length) throw new Error('Aucune séance terminée à exporter pour le moment.')
 
   const csv = completedSessionsToCsv(completions)

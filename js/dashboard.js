@@ -2,13 +2,13 @@ import { api } from './api.js'
 import { escapeHtml, formatMinutes, mountNavigation, requireUser, showMessage } from './common.js'
 import { mountEngagementDashboard } from './engagement.js'
 import { syncCompletedSessions } from './gamification.js'
+import { getPhysicalProfile, goalLabel } from './physical-profile.js'
 import { showReminderOnboardingOnce } from './reminder-ui.js'
 import { mountWeatherWidget } from './weather.js'
 
 const dashboard = document.querySelector('#dashboard')
 const message = document.querySelector('#message')
 let plan = null
-let activeFilter = 'all'
 
 const statusLabels = {
   not_started: 'À faire',
@@ -23,7 +23,6 @@ function sessionsWithContext() {
 }
 
 function sessionRow(session, index) {
-  if (activeFilter !== 'all' && session.status !== activeFilter) return ''
   return `
     <article class="session-row ${session.status === 'completed' ? 'completed' : ''}">
       <span class="session-step">${session.status === 'completed' ? '✓' : index + 1}</span>
@@ -37,7 +36,7 @@ function sessionRow(session, index) {
         <a class="button button-ghost" href="/session.html?id=${encodeURIComponent(session.id)}">
           ${session.status === 'in_progress' ? 'Reprendre' : session.status === 'completed' ? 'Voir' : 'Ouvrir'}
         </a>
-        ${session.status !== 'not_started' ? `<button class="text-button" type="button" data-reset="session" data-id="${session.id}" data-label="${escapeHtml(session.title)}">Réinitialiser</button>` : ''}
+        ${session.status !== 'not_started' ? `<button class="reset-action" type="button" data-reset="day" data-id="${session.id}" data-label="${escapeHtml(session.title)}">↺ Réinitialiser cette journée</button>` : ''}
       </div>
     </article>`
 }
@@ -51,7 +50,9 @@ function renderPlan() {
       </summary>
       <div class="season-intro">
         <p>${escapeHtml(season.description || '')}</p>
-        <button class="text-button" type="button" data-reset="season" data-id="${season.id}" data-label="${escapeHtml(season.title)}">Réinitialiser la saison</button>
+        ${(season.weeks || []).some((week) => week.sessions.some((session) => session.status !== 'not_started'))
+          ? `<button class="reset-action" type="button" data-reset="season" data-id="${season.id}" data-label="${escapeHtml(season.title)}">↺ Réinitialiser</button>`
+          : ''}
       </div>
       ${(season.weeks || []).map((week) => `
         <details class="week">
@@ -59,8 +60,10 @@ function renderPlan() {
             <span class="summary-title">${escapeHtml(week.title)}</span>
             <span class="summary-progress">${week.completedCount}/${week.sessions.length} terminées</span>
           </summary>
-          <div class="reset-row"><button class="text-button" type="button" data-reset="week" data-id="${week.id}" data-label="${escapeHtml(week.title)}">Réinitialiser la semaine</button></div>
-          <div class="sessions">${week.sessions.map(sessionRow).join('') || '<p class="loading">Aucune séance pour ce filtre.</p>'}</div>
+          ${week.sessions.some((session) => session.status !== 'not_started')
+            ? `<div class="reset-row"><button class="reset-action" type="button" data-reset="week" data-id="${week.id}" data-label="${escapeHtml(week.title)}">↺ Réinitialiser</button></div>`
+            : ''}
+          <div class="sessions">${week.sessions.map(sessionRow).join('')}</div>
         </details>`).join('')}
     </details>`).join('')
 }
@@ -73,16 +76,22 @@ function render(user) {
     || sessions.find((session) => session.status === 'not_started')
     || sessions.at(-1)
   const minutes = Math.round(sessions.reduce((total, session) => total + Number(session.durationSeconds || 0), 0) / 60)
+  const runnerProfile = getPhysicalProfile(user.id)
+  const selectedGoals = runnerProfile.goals.map(goalLabel).filter(Boolean)
+  const goalsSummary = selectedGoals.slice(0, 2).join(' · ')
+    + (selectedGoals.length > 2 ? ` · +${selectedGoals.length - 2}` : '')
+  const readyLabel = runnerProfile.gender === 'female' ? 'Prête' : runnerProfile.gender === 'male' ? 'Prêt' : 'Prêt·e'
 
   dashboard.className = ''
   dashboard.innerHTML = `
     <section id="weather-widget" class="weather-card card" aria-live="polite"></section>
     <section class="hero">
       <div class="hero-content">
-        <p class="eyebrow">Votre terrain d’entraînement</p>
-        <h1>Prêt·e pour la prochaine foulée,<br><span>${escapeHtml(user.username)}</span> ?</h1>
-        <p>Votre programme avance avec vous. Une séance régulière vaut mieux qu’un départ trop rapide.</p>
-        ${next ? `<a class="button button-large" href="/session.html?id=${next.id}">${next.status === 'in_progress' ? 'Reprendre la séance' : 'Lancer la prochaine séance'} →</a>` : ''}
+        <p class="eyebrow">Mon programme</p>
+        <h1>${readyLabel} pour votre prochaine foulée ?</h1>
+        <p>Chaque séance compte.</p>
+        ${goalsSummary ? `<p class="hero-goal"><span aria-hidden="true">◎</span> Mes objectifs : <strong>${escapeHtml(goalsSummary)}</strong></p>` : ''}
+        ${next ? `<a class="button" href="/session.html?id=${next.id}">${next.status === 'in_progress' ? 'Reprendre la séance' : 'Lancer la prochaine séance'} →</a>` : ''}
       </div>
       <div class="progress-ring" style="--progress:${percent * 3.6}deg">
         <div class="progress-ring-inner"><strong>${percent}%</strong><small>${progress.completed} sur ${progress.total} séances</small></div>
@@ -96,17 +105,12 @@ function render(user) {
     <section id="programme">
       <header class="section-tools">
         <div><p class="eyebrow">Saisons · Semaines · Séances</p><h2>Mon parcours</h2></div>
-        <div class="filters" aria-label="Filtrer les séances">
-          ${[
-            ['all', 'Toutes'], ['in_progress', 'En cours'], ['not_started', 'À faire'], ['completed', 'Terminées'],
-          ].map(([value, label]) => `<button type="button" data-filter="${value}" class="${value === activeFilter ? 'active' : ''}">${label}</button>`).join('')}
-        </div>
       </header>
       <div class="plan">${renderPlan()}</div>
     </section>
     <section id="engagement-dashboard" class="engagement-section" aria-label="Statistiques et gamification"></section>`
   mountWeatherWidget(document.querySelector('#weather-widget'))
-  mountEngagementDashboard(document.querySelector('#engagement-dashboard'))
+  mountEngagementDashboard(document.querySelector('#engagement-dashboard'), user.id)
   showReminderOnboardingOnce()
 }
 
@@ -120,7 +124,7 @@ async function load() {
   mountNavigation(user)
   try {
     plan = await api('/runner/plan')
-    syncCompletedSessions(plan)
+    syncCompletedSessions(plan, user.id)
     render(user)
   } catch (error) {
     dashboard.hidden = true
@@ -129,23 +133,46 @@ async function load() {
 }
 
 dashboard.addEventListener('click', async (event) => {
-  const filter = event.target.closest('[data-filter]')
-  if (filter) {
-    activeFilter = filter.dataset.filter
-    render(JSON.parse(localStorage.getItem('jcpmf_user')))
-    return
-  }
-
   const reset = event.target.closest('[data-reset]')
   if (!reset) return
   event.preventDefault()
-  if (!window.confirm(`Réinitialiser la progression de « ${reset.dataset.label} » ?`)) return
+  const user = JSON.parse(localStorage.getItem('jcpmf_user') || 'null')
+  if (!user) return
+  const scope = reset.dataset.reset
+  const sessions = sessionsWithContext()
+  const selectedIndex = sessions.findIndex((session) => Number(session.id) === Number(reset.dataset.id))
+  const daysToReset = scope === 'day' && selectedIndex >= 0
+    ? sessions.slice(selectedIndex).filter((session) => session.status !== 'not_started')
+    : []
+  const followingCount = Math.max(0, daysToReset.length - 1)
+  const confirmation = scope === 'day'
+    ? `Réinitialiser « ${reset.dataset.label} »${followingCount ? ` et ${followingCount} journée${followingCount > 1 ? 's' : ''} suivante${followingCount > 1 ? 's' : ''}` : ''} ?`
+    : `Réinitialiser la progression de « ${reset.dataset.label} » ?`
+  if (!window.confirm(confirmation)) return
+  reset.disabled = true
   try {
-    await api(`/runner/progress/${reset.dataset.reset}/${reset.dataset.id}`, { method: 'DELETE' })
+    if (scope === 'day') {
+      for (const session of daysToReset) {
+        await api(`/runner/progress/session/${session.id}`, { method: 'DELETE' })
+      }
+    } else {
+      await api(`/runner/progress/${scope}/${reset.dataset.id}`, { method: 'DELETE' })
+    }
     plan = await api('/runner/plan')
-    render(JSON.parse(localStorage.getItem('jcpmf_user')))
+    syncCompletedSessions(plan, user.id)
+    render(user)
+    showMessage(message, 'La progression et les statistiques ont été mises à jour.', 'success')
   } catch (error) {
+    try {
+      plan = await api('/runner/plan')
+      syncCompletedSessions(plan, user.id)
+      render(user)
+    } catch {
+      // Le message d’origine reste prioritaire si le rafraîchissement échoue aussi.
+    }
     showMessage(message, error.message)
+  } finally {
+    if (reset.isConnected) reset.disabled = false
   }
 })
 

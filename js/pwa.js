@@ -1,4 +1,6 @@
 let installPrompt = null
+let installPopupDismissed = false
+const INSTALL_POPUP_DISMISSED_KEY = 'jcpmf-install-popup-dismissed'
 
 function isInstalled() {
   return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true
@@ -13,9 +15,29 @@ function installButtons() {
   return [...document.querySelectorAll('[data-install-app]')]
 }
 
+function installPopups() {
+  return [...document.querySelectorAll('[data-install-popup]')]
+}
+
+function popupWasDismissed() {
+  if (installPopupDismissed) return true
+  try {
+    return sessionStorage.getItem(INSTALL_POPUP_DISMISSED_KEY) === 'true'
+  } catch {
+    return false
+  }
+}
+
 function updateButtons() {
   const visible = !isInstalled() && (Boolean(installPrompt) || isIos())
   installButtons().forEach((button) => { button.hidden = !visible })
+  installPopups().forEach((popup) => { popup.hidden = !visible || popupWasDismissed() })
+}
+
+function dismissInstallPopup() {
+  installPopupDismissed = true
+  try { sessionStorage.setItem(INSTALL_POPUP_DISMISSED_KEY, 'true') } catch { /* Le masquage reste valable sur cette page. */ }
+  updateButtons()
 }
 
 async function requestInstallation() {
@@ -40,6 +62,11 @@ export function setupInstallButtons() {
     if (button.dataset.installReady) return
     button.dataset.installReady = 'true'
     button.addEventListener('click', requestInstallation)
+  })
+  document.querySelectorAll('[data-install-dismiss]').forEach((button) => {
+    if (button.dataset.installDismissReady) return
+    button.dataset.installDismissReady = 'true'
+    button.addEventListener('click', dismissInstallPopup)
   })
   updateButtons()
 }
