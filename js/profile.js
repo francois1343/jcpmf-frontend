@@ -27,6 +27,7 @@ const profileIcons = {
   follow: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 8.5c0 5-8 10.5-8 10.5S4 13.5 4 8.5A4.5 4.5 0 0 1 12 5a4.5 4.5 0 0 1 8 3.5Z"/></svg>',
   data: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V9m7 10V5m7 14v-7M3 19h18"/></svg>',
   appearance: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16Z"/></svg>',
+  settings: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.43 12.98c.04-.32.07-.65.07-.98s-.03-.66-.07-.98l2.11-1.65a.5.5 0 0 0 .12-.64l-2-3.46a.5.5 0 0 0-.6-.22l-2.49 1a7.4 7.4 0 0 0-1.69-.98l-.38-2.65A.5.5 0 0 0 14 2h-4a.5.5 0 0 0-.5.42l-.38 2.65a7.4 7.4 0 0 0-1.69.98l-2.49-1a.5.5 0 0 0-.6.22l-2 3.46a.5.5 0 0 0 .12.64l2.11 1.65a7.5 7.5 0 0 0 0 1.96l-2.11 1.65a.5.5 0 0 0-.12.64l2 3.46a.5.5 0 0 0 .6.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.04.24.25.42.5.42h4a.5.5 0 0 0 .5-.42l.38-2.65a7.4 7.4 0 0 0 1.69-.98l2.49 1a.5.5 0 0 0 .6-.22l2-3.46a.5.5 0 0 0-.12-.64ZM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7"/></svg>',
 }
 
 async function load() {
@@ -50,6 +51,11 @@ async function load() {
       </div>
       <div class="profile-header-copy"><p class="eyebrow">Espace personnel</p><h1>Mon profil</h1><p class="muted">Votre compte et les réglages du parcours.</p></div>
     </header>
+    <div class="profile-settings-trigger-row">
+      <button id="open-profile-settings" class="profile-settings-trigger" type="button" aria-haspopup="dialog" aria-controls="profile-settings-dialog">
+        <span aria-hidden="true">${profileIcons.settings}</span><span>Paramètres</span>
+      </button>
+    </div>
     <section class="card profile-module profile-photo-card">
       <div><p class="eyebrow">Avatar</p><h2>Votre image</h2><p class="muted">Photo ou illustration, conservée sur cet appareil.</p></div>
       <div class="profile-avatar-actions">
@@ -99,12 +105,13 @@ async function load() {
           </label>
         </div>
         <fieldset class="goals-fieldset">
-          <legend>Mes objectifs <small>Plusieurs choix possibles</small></legend>
+          <legend>Progression des objectifs <small>Sélection multiple</small></legend>
           <div class="goal-options">
-            ${PHYSICAL_GOALS.map((goal) => `
+            ${PHYSICAL_GOALS.map((goal, index) => `
               <label class="goal-option">
+                <span class="goal-order" aria-hidden="true">${index + 1}</span>
+                <span class="goal-label">${escapeHtml(goal.label)}</span>
                 <input type="checkbox" name="goals" value="${goal.value}" ${physicalProfile.goals.includes(goal.value) ? 'checked' : ''}>
-                <span>${escapeHtml(goal.label)}</span>
               </label>`).join('')}
           </div>
         </fieldset>
@@ -115,6 +122,13 @@ async function load() {
         <p id="physical-profile-status" class="profile-data-status" role="status"></p>
       </form>
     </section>
+    <dialog id="profile-settings-dialog" class="profile-settings-dialog" aria-labelledby="profile-settings-title">
+      <header class="profile-settings-dialog-header">
+        <span class="profile-settings-dialog-icon" aria-hidden="true">${profileIcons.settings}</span>
+        <div><p class="eyebrow">Réglages</p><h2 id="profile-settings-title">Paramètres</h2></div>
+        <button id="close-profile-settings" class="profile-settings-dialog-close" type="button" aria-label="Fermer les paramètres">×</button>
+      </header>
+      <div class="profile-settings-content">
     <section class="card profile-module data-export-card" aria-labelledby="csv-export-title">
       <span class="settings-icon" aria-hidden="true">${profileIcons.data}</span>
       <div class="settings-copy">
@@ -154,7 +168,24 @@ async function load() {
     <section class="card profile-module danger-zone">
       <div><p class="eyebrow">Zone sensible</p><h2>Réinitialiser ma progression</h2><p class="muted">Efface les séances et bilans sans supprimer votre compte.</p></div>
       <button id="reset-all" class="button button-danger danger-zone-action" type="button">Tout réinitialiser</button>
-    </section>`
+    </section>
+      </div>
+    </dialog>`
+
+  const settingsDialog = document.querySelector('#profile-settings-dialog')
+  const settingsTrigger = document.querySelector('#open-profile-settings')
+  settingsTrigger.addEventListener('click', () => {
+    if (typeof settingsDialog.showModal === 'function') settingsDialog.showModal()
+    else settingsDialog.setAttribute('open', '')
+  })
+  document.querySelector('#close-profile-settings').addEventListener('click', () => {
+    if (typeof settingsDialog.close === 'function') settingsDialog.close()
+    else settingsDialog.removeAttribute('open')
+  })
+  settingsDialog.addEventListener('click', (event) => {
+    if (event.target === settingsDialog) settingsDialog.close()
+  })
+  settingsDialog.addEventListener('close', () => settingsTrigger.focus())
 
   const avatarTarget = document.querySelector('.profile-avatar')
   const avatarInput = document.querySelector('#profile-avatar-input')

@@ -1,11 +1,10 @@
 const STORAGE_PREFIX = 'jcpmf_physical_profile_v1'
 
 export const PHYSICAL_GOALS = [
-  { value: 'start', label: 'Commencer ou reprendre la course' },
-  { value: 'regularity', label: 'Courir plus régulièrement' },
-  { value: 'endurance', label: 'Gagner en endurance' },
+  { value: 'start', label: 'Commencer ou reprendre' },
+  { value: 'regularity', label: 'Installer une routine' },
+  { value: 'endurance', label: 'Développer mon endurance' },
   { value: 'performance', label: 'Améliorer mes performances' },
-  { value: 'wellbeing', label: 'Bouger pour mon bien-être' },
 ]
 
 const VALID_GOALS = new Set(PHYSICAL_GOALS.map((goal) => goal.value))
