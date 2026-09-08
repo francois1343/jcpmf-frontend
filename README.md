@@ -2,6 +2,36 @@
 
 Interface web de **Je cours pour ma forme**. Le projet utilise du HTML, du CSS et du JavaScript natif. Il peut aussi être installé sur un téléphone comme une application.
 
+## Utiliser l'application
+
+1. Créer un compte, se connecter ou choisir le mode démo.
+2. Ouvrir une séance depuis l'accueil et suivre les étapes du chrono.
+3. Remplir le petit bilan à la fin de la séance.
+4. Utiliser **Parcours** pour préparer une sortie libre avec la carte et le GPS.
+5. Ouvrir **Profil** pour choisir un avatar, compléter ses objectifs et régler l'apparence ou les rappels.
+6. Sur mobile, accepter la proposition d'installation ou utiliser « Ajouter à l'écran d'accueil » dans le navigateur.
+
+Le mode démo et plusieurs préférences restent enregistrés uniquement sur l'appareil. Un vrai compte est nécessaire pour conserver la progression dans la base MySQL.
+
+## Organisation des fichiers
+
+- `index.html` et `js/dashboard.js` : accueil et programme.
+- `session.html` et `js/session.js` : séance, chrono et bilan.
+- `routes.html` et `js/routes.js` : parcours, carte et suivi GPS.
+- `profile.html` et `js/profile.js` : profil et paramètres.
+- `js/api.js` : échanges avec le backend.
+- `js/config.js` : choix de l'adresse du backend.
+- `css/styles.css` : styles communs à toutes les pages.
+- `sw.js` et `manifest.webmanifest` : installation et cache de la PWA.
+
+## Déployer sur Vercel
+
+1. Importer uniquement le dépôt frontend.
+2. Ne pas définir de **Root Directory**.
+3. Ajouter `BACKEND_API_URL` dans les variables d'environnement de production.
+4. Lancer un nouveau déploiement.
+5. Vérifier `/api/config`, puis tester la création d'un vrai compte.
+
 ## Lancer le projet
 
 Depuis le dossier `jcpmf-frontend` :
@@ -54,33 +84,3 @@ Cette page doit renvoyer une adresse qui se termine par `/api`. Les identifiants
 6. Ouvrir `http://IP_DE_L_ORDINATEUR:3000` sur le téléphone.
 
 Pour ce test, le backend doit accepter les adresses du réseau local avec `ALLOW_LAN_ORIGINS=true` dans son propre fichier `.env`.
-
-## Utiliser l'application
-
-1. Créer un compte, se connecter ou choisir le mode démo.
-2. Ouvrir une séance depuis l'accueil et suivre les étapes du chrono.
-3. Remplir le petit bilan à la fin de la séance.
-4. Utiliser **Parcours** pour préparer une sortie libre avec la carte et le GPS.
-5. Ouvrir **Profil** pour choisir un avatar, compléter ses objectifs et régler l'apparence ou les rappels.
-6. Sur mobile, accepter la proposition d'installation ou utiliser « Ajouter à l'écran d'accueil » dans le navigateur.
-
-Le mode démo et plusieurs préférences restent enregistrés uniquement sur l'appareil. Un vrai compte est nécessaire pour conserver la progression dans la base MySQL.
-
-## Organisation des fichiers
-
-- `index.html` et `js/dashboard.js` : accueil et programme.
-- `session.html` et `js/session.js` : séance, chrono et bilan.
-- `routes.html` et `js/routes.js` : parcours, carte et suivi GPS.
-- `profile.html` et `js/profile.js` : profil et paramètres.
-- `js/api.js` : échanges avec le backend.
-- `js/config.js` : choix de l'adresse du backend.
-- `css/styles.css` : styles communs à toutes les pages.
-- `sw.js` et `manifest.webmanifest` : installation et cache de la PWA.
-
-## Déployer sur Vercel
-
-1. Importer uniquement le dépôt frontend.
-2. Ne pas définir de **Root Directory**.
-3. Ajouter `BACKEND_API_URL` dans les variables d'environnement de production.
-4. Lancer un nouveau déploiement.
-5. Vérifier `/api/config`, puis tester la création d'un vrai compte.
