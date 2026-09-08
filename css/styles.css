@@ -496,8 +496,12 @@ input, select, textarea { width: 100%; padding: .75rem; border: 1px solid var(--
 
 /* Profil et paramètres */
 .profile-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
-.profile-header-copy h1 { margin-bottom: .2rem; font-size: clamp(1.8rem, 5vw, 2.65rem); }
-.profile-header-copy p:last-child { margin-bottom: 0; }
+.profile-header-copy { min-width: 0; flex: 1 1 auto; }
+.profile-header-copy > .eyebrow { margin-bottom: .2rem; }
+.profile-header-copy > p:last-child { margin: .25rem 0 0; }
+.profile-title-row { display: flex; align-items: center; gap: 1rem; }
+.profile-title-row h1 { min-width: 0; margin: 0; font-size: clamp(1.8rem, 5vw, 2.65rem); }
+.profile-title-row .profile-settings-trigger { margin-left: auto; }
 .profile-photo-editor { flex: 0 0 auto; }
 .profile-avatar-picker { position: relative; width: 6.25rem; aspect-ratio: 1; display: block; border: 3px solid var(--surface); border-radius: 50%; box-shadow: 0 7px 22px rgb(18 67 39 / 16%); cursor: pointer; transition: transform .18s ease, box-shadow .18s ease; }
 .profile-avatar-picker:hover { transform: translateY(-2px); box-shadow: 0 12px 34px rgb(18 67 39 / 23%); }
@@ -559,8 +563,6 @@ input, select, textarea { width: 100%; padding: .75rem; border: 1px solid var(--
 .profile-data-status.success { color: var(--green-700); }
 .profile-data-status.error { color: var(--danger); }
 .avatar-status:empty, .profile-data-status:empty, .appearance-status:empty, .export-status:empty { display: none; }
-.profile-kicker-row { display: flex; align-items: center; gap: .55rem; margin-bottom: .15rem; }
-.profile-kicker-row .eyebrow { margin: 0; }
 .profile-settings-trigger { width: 2.75rem; aspect-ratio: 1; flex: 0 0 auto; display: grid; place-items: center; padding: 0; border: 1px solid color-mix(in srgb, #70539a 38%, var(--border)); border-radius: .78rem; color: #70539a; background: color-mix(in srgb, #70539a 12%, var(--surface)); box-shadow: 0 4px 12px rgb(75 52 108 / 10%); cursor: pointer; transition: color .16s ease, border-color .16s ease, background-color .16s ease, transform .16s ease, box-shadow .16s ease; }
 .profile-settings-trigger:hover { border-color: color-mix(in srgb, #70539a 65%, var(--border)); background: color-mix(in srgb, #70539a 18%, var(--surface)); box-shadow: 0 6px 16px rgb(75 52 108 / 18%); transform: translateY(-1px); }
 .profile-settings-trigger > span { width: 1.3rem; height: 1.3rem; display: grid; place-items: center; }

@@ -51,13 +51,14 @@ async function load() {
         </label>
       </div>
       <div class="profile-header-copy">
-        <div class="profile-kicker-row">
-          <p class="eyebrow">Espace personnel</p>
+        <p class="eyebrow">Espace personnel</p>
+        <div class="profile-title-row">
+          <h1>Mon profil</h1>
           <button id="open-profile-settings" class="profile-settings-trigger" type="button" aria-label="Ouvrir les paramètres" title="Paramètres" aria-haspopup="dialog" aria-controls="profile-settings-dialog">
             <span aria-hidden="true">${profileIcons.settings}</span>
           </button>
         </div>
-        <h1>Mon profil</h1><p class="muted">Votre compte et les réglages du parcours.</p>
+        <p class="muted">Votre compte et les réglages du parcours.</p>
       </div>
     </header>
     <section class="card profile-module profile-photo-card">
