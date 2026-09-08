@@ -1,3 +1,4 @@
+// Préférences d'apparence enregistrées sur l'appareil.
 export const THEME_STORAGE_KEY = 'app_theme'
 export const DYNAMIC_COLORS_STORAGE_KEY = 'dynamic_colors_enabled'
 export const APPEARANCE_EVENT = 'jcpmf:appearance-updated'

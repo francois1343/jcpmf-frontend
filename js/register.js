@@ -1,3 +1,4 @@
+// Création d'un compte coureur.
 import { register } from './api.js'
 import { redirectAuthenticatedUser, setLoading, showMessage } from './common.js'
 

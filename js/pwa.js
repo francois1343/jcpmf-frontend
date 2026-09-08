@@ -1,3 +1,4 @@
+// Installation de la PWA sur ordinateur, Android et iOS.
 let installPrompt = null
 let installPopupDismissed = false
 const INSTALL_POPUP_DISMISSED_KEY = 'jcpmf-install-popup-dismissed'
@@ -36,7 +37,7 @@ function updateButtons() {
 
 function dismissInstallPopup() {
   installPopupDismissed = true
-  try { sessionStorage.setItem(INSTALL_POPUP_DISMISSED_KEY, 'true') } catch { /* Le masquage reste valable sur cette page. */ }
+  try { sessionStorage.setItem(INSTALL_POPUP_DISMISSED_KEY, 'true') } catch { /* Rien à enregistrer. */ }
   updateButtons()
 }
 

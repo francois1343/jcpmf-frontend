@@ -1,3 +1,5 @@
+// Fonction Vercel : transmet au navigateur l'URL publique du backend.
+// La valeur se règle dans Vercel sous le nom BACKEND_API_URL.
 module.exports = function config(_request, response) {
   const configuredUrl = String(process.env.BACKEND_API_URL || '').trim().replace(/\/$/, '')
 

@@ -1,3 +1,4 @@
+// Accueil du coureur : programme, progression, météo et rappels.
 import { api } from './api.js'
 import { escapeHtml, formatMinutes, mountNavigation, requireUser, showMessage } from './common.js'
 import { mountEngagementDashboard } from './engagement.js'
@@ -168,7 +169,7 @@ dashboard.addEventListener('click', async (event) => {
       syncCompletedSessions(plan, user.id)
       render(user)
     } catch {
-      // Le message d’origine reste prioritaire si le rafraîchissement échoue aussi.
+      // On garde le premier message d'erreur.
     }
     showMessage(message, error.message)
   } finally {

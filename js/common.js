@@ -1,3 +1,4 @@
+// Éléments partagés entre les pages : navigation, session et messages.
 import './appearance.js'
 import { clearSession, currentUser, getToken } from './api.js'
 import { renderProfileAvatar } from './avatar.js'
@@ -70,9 +71,8 @@ export async function redirectAuthenticatedUser() {
     window.location.replace(user.role === 'admin' ? '/admin.html' : '/index.html')
     return true
   } catch {
-    // La page de connexion reste affichée si le token est expiré ou si
-    // le backend est temporairement indisponible. Cela évite une boucle
-    // login.html -> index.html -> login.html basée sur une session en cache.
+    // En cas d'échec, on reste sur la connexion au lieu de créer une boucle
+    // entre la page d'accueil et la page de connexion.
     return false
   }
 }

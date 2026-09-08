@@ -1,3 +1,4 @@
+// Données physiques et objectifs enregistrés pour chaque profil local.
 const STORAGE_PREFIX = 'jcpmf_physical_profile_v1'
 
 export const PHYSICAL_GOALS = [

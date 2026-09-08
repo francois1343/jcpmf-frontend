@@ -1,3 +1,4 @@
+// Version locale de l'API pour essayer l'application sans créer de compte.
 export const DEMO_TOKEN = 'jcpmf-local-demo-session'
 export const DEMO_USER = Object.freeze({
   id: 900001,

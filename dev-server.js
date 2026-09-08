@@ -1,3 +1,4 @@
+// Petit serveur statique utilisé uniquement pour le développement local.
 const http = require('http')
 const fs = require('fs')
 const path = require('path')

@@ -1,3 +1,4 @@
+// Météo actuelle et conseil rapide pour la sortie.
 import { confirmLocationAccess, hasLocationAccess } from './location-consent.js'
 
 const OPEN_METEO_ENDPOINT = 'https://api.open-meteo.com/v1/forecast'

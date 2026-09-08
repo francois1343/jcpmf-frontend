@@ -1,3 +1,4 @@
+// Demande une explication à l'utilisateur avant la permission GPS du navigateur.
 async function permissionState() {
   try {
     const result = await navigator.permissions?.query({ name: 'geolocation' })
@@ -23,7 +24,7 @@ function markNoticeAccepted(scope) {
   try {
     localStorage.setItem(noticeKey(scope), 'accepted')
   } catch {
-    // La permission du navigateur reste disponible même si le stockage local est indisponible.
+    // L'accord ne sera simplement pas mémorisé.
   }
 }
 

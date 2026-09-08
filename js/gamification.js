@@ -1,3 +1,4 @@
+// Calcul des séries et statistiques à partir des séances locales.
 const STORAGE_KEY = 'jcpmf_gamification_v1'
 const UPDATE_EVENT = 'jcpmf:gamification-updated'
 

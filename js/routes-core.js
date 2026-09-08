@@ -1,3 +1,4 @@
+// Fonctions de calcul utilisées par la carte et le suivi GPS.
 function validCoordinate(coordinate) {
   return Array.isArray(coordinate)
     && coordinate.length === 2
@@ -34,7 +35,7 @@ export async function loadRoutes(fetchFn = fetch) {
   return data.parcours.map(normaliseRoute)
 }
 
-// Distance entre deux relevés GPS selon la formule de Haversine.
+// Distance entre deux relevés GPS (formule de Haversine).
 export function haversineDistanceMeters(left, right) {
   const radius = 6371000
   const radians = (value) => Number(value) * Math.PI / 180
@@ -66,7 +67,7 @@ export function formatAveragePace(elapsedMilliseconds, distanceMeters) {
   return `${String(adjustedMinutes).padStart(2, '0')}:${String(adjustedSeconds).padStart(2, '0')} /km`
 }
 
-// La progression mesure le volume parcouru, plafonné à 100 % de l'itinéraire choisi.
+// Progression sur l'itinéraire, limitée à 100 %.
 export function routeProgress(distanceMeters, routeDistanceKm) {
   const targetMeters = Number(routeDistanceKm) * 1000
   if (!Number.isFinite(targetMeters) || targetMeters <= 0) return 0

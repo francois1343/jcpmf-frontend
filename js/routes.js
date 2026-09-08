@@ -1,3 +1,4 @@
+// Page Parcours : carte, choix d'une boucle et suivi de la sortie libre.
 import { escapeHtml, mountNavigation, requireUser, showMessage } from './common.js'
 import {
   formatAveragePace,
@@ -32,7 +33,7 @@ const mapTools = document.querySelector('.map-tools')
 const runTracker = document.querySelector('#run-tracker')
 let currentUserId = null
 
-// État unique de la sortie : la trace GPS n'est jamais persistée ni envoyée à l'API JCPMF.
+// La trace GPS reste en mémoire et n'est pas envoyée au backend.
 const state = {
   routes: [],
   routePresets: [],
@@ -164,7 +165,7 @@ function resetRunMetrics() {
   document.querySelector('#run-progress-bar').style.width = '0%'
 }
 
-// Le temps actif exclut automatiquement toutes les périodes de pause.
+// Le chrono ne compte pas les pauses.
 function elapsedMilliseconds() {
   return state.elapsedBeforePauseMs + (state.runStatus === 'running' && state.resumedAt ? Date.now() - state.resumedAt : 0)
 }
@@ -241,7 +242,7 @@ function recenterOnRunner() {
   state.map.setView([state.lastPosition.latitude, state.lastPosition.longitude], Math.max(16, state.map.getZoom()), { animate: true })
 }
 
-// Met à jour le marqueur GPS. La trace n'est enrichie que pendant l'état « running ».
+// Ajoute un point à la trace seulement pendant la course.
 function handleGpsPosition(position) {
   const current = {
     latitude: Number(position.coords.latitude),
@@ -346,8 +347,7 @@ async function startRun(route) {
   }
 }
 
-// La surveillance GPS continue pendant une pause pour garder le marqueur visible,
-// mais lastTrackedPoint est réinitialisé afin de ne pas compter le déplacement en pause.
+// Pendant une pause, le marqueur bouge encore mais la distance n'augmente pas.
 function togglePause() {
   if (state.runStatus === 'running') {
     state.elapsedBeforePauseMs = elapsedMilliseconds()
@@ -566,7 +566,7 @@ function initializeMap() {
   })
 }
 
-// Les actions des cartes restent déléguées au conteneur, même après leur nouveau rendu.
+// Un seul écouteur suffit même lorsque la liste est redessinée.
 routesList.addEventListener('click', (event) => {
   const button = event.target.closest('[data-route-action]')
   if (!button) return

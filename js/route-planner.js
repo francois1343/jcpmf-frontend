@@ -1,3 +1,4 @@
+// Recherche d'une adresse et création de boucles de course autour du départ.
 import { haversineDistanceMeters, normaliseRoute } from './routes-core.js'
 
 const VALHALLA_ENDPOINT = 'https://valhalla1.openstreetmap.de/route'
@@ -44,11 +45,11 @@ function writeGeocodingCache(cache) {
       .slice(0, 20)
     localStorage.setItem(GEOCODING_CACHE_KEY, JSON.stringify(Object.fromEntries(recentEntries)))
   } catch {
-    // Le calcul reste utilisable si le stockage local est plein ou désactivé.
+    // Le cache est facultatif.
   }
 }
 
-// Nominatim n'est interrogé qu'après l'envoi du formulaire : aucun auto-complétion.
+// Nominatim n'est appelé qu'à l'envoi du formulaire.
 export async function geocodeAddress(address, fetchFn = fetch) {
   const query = String(address || '').trim().replace(/\s+/g, ' ')
   if (query.length < 4) throw new Error('Indiquez une adresse suffisamment précise.')
@@ -69,7 +70,7 @@ export async function geocodeAddress(address, fetchFn = fetch) {
   })
   let data
   try {
-    // Le service public Nominatim impose au maximum une requête par seconde.
+    // Respecte la limite du service public : une requête par seconde.
     const remainingDelay = Math.max(0, 1000 - (Date.now() - lastGeocodingRequestAt))
     if (remainingDelay) await new Promise((resolve) => window.setTimeout(resolve, remainingDelay))
     lastGeocodingRequestAt = Date.now()
@@ -91,7 +92,7 @@ export async function geocodeAddress(address, fetchFn = fetch) {
   return result
 }
 
-// Projette un point à une distance et un cap donnés sur la sphère terrestre.
+// Calcule un point à partir d'une distance et d'un cap.
 export function destinationPoint(origin, distanceKm, bearingDegrees) {
   if (!validOrigin(origin)) throw new Error('Le point de départ est invalide.')
   const radiusKm = 6371
@@ -112,9 +113,9 @@ export function destinationPoint(origin, distanceKm, bearingDegrees) {
   return { latitude: degrees(targetLatitude), longitude: degrees(targetLongitude) }
 }
 
-// Trois points de passage répartis autour du départ favorisent une vraie boucle.
+// Trois points de passage forment la boucle autour du départ.
 export function buildLoopWaypoints(origin, targetDistanceKm, directionDegrees = 0) {
-  // Pour un triangle, le périmètre théorique vaut environ 5,46 fois le rayon.
+  // Rapport approximatif entre le rayon et le périmètre du triangle.
   const radiusKm = Math.max(.25, Number(targetDistanceKm) / 5.46)
   return [
     { latitude: Number(origin.latitude), longitude: Number(origin.longitude) },
@@ -125,7 +126,7 @@ export function buildLoopWaypoints(origin, targetDistanceKm, directionDegrees = 
   ]
 }
 
-// Décode les polylines à précision 6 renvoyées par Valhalla.
+// Décode le format de tracé renvoyé par Valhalla.
 export function decodePolyline(encoded, precision = 6) {
   const coordinates = []
   const factor = 10 ** precision
@@ -181,7 +182,7 @@ async function requestPedestrianLoop(origin, preset, fetchFn) {
   }
 }
 
-// Le serveur OSRM « foot » répond en GET : il évite le prévol CORS d'une requête JSON.
+// Ce serveur OSRM accepte une simple requête GET depuis le navigateur.
 async function requestOsrmFootLoop(waypoints, preset, fetchFn) {
   const coordinates = waypoints.map((point) => `${point.longitude},${point.latitude}`).join(';')
   const url = new URL(`${OSRM_FOOT_ENDPOINT}/${coordinates}`)
@@ -252,7 +253,7 @@ export function calculateElevationGain(elevations) {
     const previous = Number(elevations[index - 1])
     const current = Number(elevations[index])
     const difference = current - previous
-    // Ignore les oscillations inférieures à 1 mètre du modèle numérique de terrain.
+    // Ignore les variations de terrain inférieures à un mètre.
     if (Number.isFinite(difference) && difference >= 1) gain += difference
   }
   return Math.round(gain)
@@ -281,7 +282,7 @@ async function addElevationToRoutes(routes, fetchFn) {
 export async function createRecommendedRoutes(origin, presets, { fetchFn = fetch, onProgress = () => {} } = {}) {
   if (!validOrigin(origin)) throw new Error('Le point de départ est invalide.')
   const generatedRoutes = []
-  // Les demandes restent séquentielles pour ménager le serveur public de démonstration.
+  // Les appels sont espacés pour ne pas surcharger le service public.
   const requestedPresets = presets.slice(0, 3)
   for (const [index, preset] of requestedPresets.entries()) {
     try {
@@ -291,7 +292,7 @@ export async function createRecommendedRoutes(origin, presets, { fetchFn = fetch
       generatedRoutes.push(await requestPedestrianLoop(origin, preset, fetchFn))
       onProgress({ completed: index + 1, total: requestedPresets.length, found: generatedRoutes.length })
     } catch {
-      // Un secteur peut ne contenir aucun chemin accessible ; les autres boucles restent proposées.
+      // Un parcours en échec n'empêche pas d'afficher les autres.
       onProgress({ completed: index + 1, total: requestedPresets.length, found: generatedRoutes.length })
     }
   }

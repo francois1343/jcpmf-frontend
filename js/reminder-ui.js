@@ -1,3 +1,4 @@
+// Interface des rappels d'activité dans les paramètres.
 import {
   checkReminders,
   disableReminders,

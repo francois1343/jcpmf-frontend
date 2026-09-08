@@ -1,3 +1,4 @@
+// Texte et image utilisés par la fenêtre de partage de fin de séance.
 function safeNumber(value) {
   const number = Number(value)
   return Number.isFinite(number) ? Math.max(0, number) : 0

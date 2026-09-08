@@ -1,3 +1,4 @@
+// Stockage et déclenchement des rappels après une période sans séance.
 import { getGamificationStats } from './gamification.js'
 
 const STORAGE_KEY = 'jcpmf_reminders_v1'

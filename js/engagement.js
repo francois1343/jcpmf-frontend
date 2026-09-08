@@ -1,3 +1,4 @@
+// Bloc « Ma régularité » affiché sur l'accueil.
 import {
   formatAccumulatedTime,
   getGamificationStats,

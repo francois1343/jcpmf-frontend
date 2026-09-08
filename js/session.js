@@ -1,3 +1,4 @@
+// Déroulement d'une séance : chrono, GPS, étapes et bilan final.
 import { api } from './api.js'
 import { APPEARANCE_EVENT, isDynamicColorsEnabled } from './appearance.js'
 import { escapeHtml, formatMinutes, formatTime, mountNavigation, requireUser, showMessage } from './common.js'
@@ -106,7 +107,7 @@ async function startTracking(reset = false) {
 
   if (typeof DeviceMotionEvent !== 'undefined' && !motionHandler) {
     if (typeof DeviceMotionEvent.requestPermission === 'function') {
-      try { await DeviceMotionEvent.requestPermission() } catch { /* Le comptage restera à zéro. */ }
+      try { await DeviceMotionEvent.requestPermission() } catch { /* Le compteur reste à zéro. */ }
     }
     motionHandler = (event) => {
       if (!state.running) return

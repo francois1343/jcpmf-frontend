@@ -1,3 +1,4 @@
+// Formulaire de connexion et accès au mode démo.
 import { login, startDemoSession } from './api.js'
 import { redirectAuthenticatedUser, setLoading, showMessage } from './common.js'
 

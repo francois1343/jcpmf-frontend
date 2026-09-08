@@ -1,3 +1,4 @@
+// Page du profil et fenêtre des paramètres.
 import { api } from './api.js'
 import {
   PRESET_AVATARS,

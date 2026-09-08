@@ -1,3 +1,4 @@
+// Appels au backend et conservation de la session dans le navigateur.
 import { getApiBase } from './config.js'
 import { DEMO_TOKEN, DEMO_USER, demoApi } from './demo-api.js'
 
@@ -63,7 +64,7 @@ export async function api(path, options = {}) {
     : await response.json().catch(() => null)
 
   if (!response.ok) {
-    // Une ancienne requête ne doit pas effacer une session renouvelée entre-temps.
+    // Ne supprime pas un token remplacé pendant la requête.
     if (response.status === 401 && getToken() === requestToken) clearSession()
     throw new Error(data?.message || `Erreur HTTP ${response.status}`)
   }

@@ -1,3 +1,4 @@
+// Choix, compression et affichage de l'avatar local.
 const STORAGE_KEY = 'user_profile_avatar'
 const UPDATE_EVENT = 'jcpmf:avatar-updated'
 const MAX_SOURCE_SIZE = 12 * 1024 * 1024

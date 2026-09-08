@@ -1,3 +1,4 @@
+// Page d'administration du programme et des comptes coureurs.
 import { api } from './api.js'
 import { escapeHtml, mountNavigation, requireUser, showMessage } from './common.js'
 import { exportLocalStorageJson } from './data-export.js'

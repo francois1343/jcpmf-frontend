@@ -1,3 +1,4 @@
+/* Couleurs et thème */
 :root {
   color: var(--text);
   background: var(--page-background);
@@ -49,6 +50,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 [hidden] { display: none !important; }
 .visually-hidden { position: absolute !important; width: 1px !important; height: 1px !important; overflow: hidden !important; margin: -1px !important; padding: 0 !important; border: 0 !important; clip: rect(0 0 0 0) !important; white-space: nowrap !important; }
 
+/* En-tête et installation */
 .app-nav {
   position: sticky;
   top: 0;
@@ -149,6 +151,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .install-popup-copy p:last-child { margin: .25rem 0 0; color: var(--muted); font-size: .72rem; line-height: 1.4; }
 .install-popup-action { grid-column: 1 / -1; min-height: 2.45rem; }
 
+/* Mise en page commune */
 .page { width: min(72rem, calc(100% - 2rem)); margin: 0 auto; padding: 2.2rem 0 4rem; }
 .narrow { width: min(48rem, calc(100% - 2rem)); }
 .eyebrow { margin-bottom: .45rem; color: var(--green-700); font-size: .76rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
@@ -162,6 +165,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .page-heading-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .65rem; }
 .data-privacy-note { margin: -1rem 0 1.5rem; color: var(--muted); font-size: .82rem; line-height: 1.5; }
 
+/* Parcours et carte */
 .routes-heading { align-items: flex-start; margin-bottom: 1rem; }
 .routes-heading h1 { font-size: clamp(1.9rem, 5vw, 2.8rem); }
 .routes-heading p:last-child { max-width: 36rem; margin: .35rem 0 0; line-height: 1.45; }
@@ -236,6 +240,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .share-status.success { color: var(--green-700); }
 .share-status.error { color: var(--danger); }
 
+/* Boutons, formulaires et messages */
 .button {
   min-height: 2.75rem;
   display: inline-flex;
@@ -276,6 +281,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 label { display: grid; gap: .42rem; color: var(--text); font-size: .9rem; font-weight: 750; }
 input, select, textarea { width: 100%; padding: .75rem; border: 1px solid var(--control-border); border-radius: .6rem; color: var(--heading); background: var(--control-background); }
 
+/* Accueil */
 .hero {
   position: relative;
   overflow: hidden;
@@ -323,6 +329,7 @@ input, select, textarea { width: 100%; padding: .75rem; border: 1px solid var(--
   to { opacity: 1; }
 }
 
+/* Programme et progression */
 .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: .65rem; margin: .7rem 0 1.7rem; }
 .metric { display: grid; gap: .12rem; padding: .85rem 1rem; border-radius: .85rem; background: var(--surface); box-shadow: none; }
 .metric strong { color: var(--green-800); font-size: 1.3rem; line-height: 1; }
@@ -421,6 +428,7 @@ input, select, textarea { width: 100%; padding: .75rem; border: 1px solid var(--
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* Séance et bilan */
 .exercise-list { display: grid; gap: .6rem; padding-left: 1.4rem; }
 .exercise-list li { display: flex; justify-content: space-between; gap: 1rem; }
 .active-session { --effort-color: #6bea9b; margin-top: 1rem; padding: clamp(1.2rem, 5vw, 2rem); border-radius: 1.5rem; color: white; background: var(--green-900); box-shadow: 0 14px 40px rgb(19 72 43 / 20%); transition: background-color .35s ease; }
@@ -486,6 +494,7 @@ input, select, textarea { width: 100%; padding: .75rem; border: 1px solid var(--
 .history-wellness span { color: var(--muted); font-size: .8rem; }
 .history-wellness strong { margin-left: .25rem; color: var(--heading); }
 
+/* Profil et paramètres */
 .profile-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
 .profile-header-copy h1 { margin-bottom: .2rem; font-size: clamp(1.8rem, 5vw, 2.65rem); }
 .profile-header-copy p:last-child { margin-bottom: 0; }
@@ -578,6 +587,7 @@ input, select, textarea { width: 100%; padding: .75rem; border: 1px solid var(--
 .danger-zone .danger-zone-action { border-color: color-mix(in srgb, var(--danger) 65%, var(--border)); color: var(--danger); background: transparent; }
 .danger-zone .danger-zone-action:hover { color: white; background: var(--danger); }
 
+/* Administration */
 .admin-grid { display: grid; grid-template-columns: minmax(17rem, 22rem) 1fr; gap: 1rem; align-items: start; }
 .admin-form { position: sticky; top: 5.4rem; }
 .table-wrap { overflow-x: auto; }
@@ -587,6 +597,7 @@ th { color: var(--muted); font-size: .75rem; text-transform: uppercase; }
 .table-actions { display: flex; gap: .5rem; }
 .table-actions button { white-space: nowrap; }
 
+/* Formats tablette et mobile */
 @media (max-width: 1000px) and (min-width: 761px) {
   .nav-user { display: none; }
   .game-stats { grid-template-columns: repeat(2, 1fr); }
@@ -670,9 +681,6 @@ th { color: var(--muted); font-size: .75rem; text-transform: uppercase; }
 @media (max-width: 390px) {
   .route-address-controls { grid-template-columns: 1fr; }
   .route-address-controls .button { min-height: 2.75rem; }
-}
-
-@media (max-width: 390px) {
   .avatar-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .danger-zone { grid-template-columns: 1fr; }
   .danger-zone-action { justify-self: start; }

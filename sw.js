@@ -1,4 +1,5 @@
-// Changez ce nom lors d’une mise en production importante pour renouveler le cache installé.
+// Cache des fichiers nécessaires au fonctionnement hors ligne.
+// Changer la version après une modification importante de l'interface.
 const CACHE_NAME = 'jcpmf-static-2026-09-07-44'
 const APP_FILES = [
   '/',

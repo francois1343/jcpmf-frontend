@@ -1,3 +1,4 @@
+// Export des données locales au format JSON ou CSV.
 import { formatAccumulatedTime, getGamificationData } from './gamification.js'
 
 const CSV_SEPARATOR = ';'
