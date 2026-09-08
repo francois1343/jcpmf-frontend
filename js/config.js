@@ -1,8 +1,8 @@
-// Adresse de l'API : port 4000 en local, variable Vercel en production.
+// Adresse de l'API fournie par /api/config, depuis le .env local ou Vercel.
 const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
 const LOCAL_BACKEND_PORT = 4000
 const VERCEL_CONFIG_ENDPOINT = '/api/config'
-let productionApiPromise = null
+let apiBasePromise = null
 
 function normalizedApiUrl(value) {
   const url = String(value || '').replace(/\/$/, '')
@@ -12,14 +12,8 @@ function normalizedApiUrl(value) {
 export async function getApiBase() {
   // Utile pour un test ponctuel depuis la console ou une page intégratrice.
   if (window.JCPMF_API_BASE) return normalizedApiUrl(window.JCPMF_API_BASE)
-  if (isLocal) return `http://127.0.0.1:${LOCAL_BACKEND_PORT}/api`
 
-  // Sur le Wi-Fi local, le frontend et le backend partagent l'IP de l'ordinateur.
-  if (window.location.protocol === 'http:') {
-    return `http://${window.location.hostname}:${LOCAL_BACKEND_PORT}/api`
-  }
-
-  productionApiPromise ||= fetch(VERCEL_CONFIG_ENDPOINT, { cache: 'no-store' })
+  apiBasePromise ||= fetch(VERCEL_CONFIG_ENDPOINT, { cache: 'no-store' })
     .then(async (response) => {
       const config = await response.json().catch(() => null)
       if (!response.ok || !config?.apiBase) {
@@ -27,5 +21,9 @@ export async function getApiBase() {
       }
       return normalizedApiUrl(config.apiBase)
     })
-  return productionApiPromise
+    .catch((error) => {
+      if (!isLocal && window.location.protocol !== 'http:') throw error
+      return `http://${window.location.hostname}:${LOCAL_BACKEND_PORT}/api`
+    })
+  return apiBasePromise
 }

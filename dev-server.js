@@ -6,6 +6,7 @@ const path = require('path')
 const root = __dirname
 const port = Number(process.env.PORT || 3000)
 const host = process.env.HOST || '0.0.0.0'
+const backendUrl = String(process.env.BACKEND_API_URL || '').trim().replace(/\/$/, '')
 const types = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -20,6 +21,19 @@ const types = {
 
 http.createServer((request, response) => {
   const pathname = decodeURIComponent(new URL(request.url, `http://${request.headers.host}`).pathname)
+
+  if (pathname === '/api/config') {
+    const requestHostname = String(request.headers.host || '127.0.0.1').split(':')[0]
+    const apiBase = backendUrl
+      ? `${backendUrl}${backendUrl.endsWith('/api') ? '' : '/api'}`
+      : `http://${requestHostname}:4000/api`
+    response.writeHead(200, {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'no-store',
+    }).end(JSON.stringify({ apiBase }))
+    return
+  }
+
   const requested = pathname === '/' ? '/index.html' : pathname
   const filePath = path.resolve(root, `.${requested}`)
 

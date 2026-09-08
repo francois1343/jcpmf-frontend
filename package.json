@@ -2,7 +2,7 @@
   "name": "jcpmf-frontend-vanilla",
   "private": true,
   "scripts": {
-    "dev": "node dev-server.js",
-    "start": "node dev-server.js"
+    "dev": "node --env-file-if-exists=.env dev-server.js",
+    "start": "node --env-file-if-exists=.env dev-server.js"
   }
 }

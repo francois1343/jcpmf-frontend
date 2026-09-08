@@ -20,16 +20,20 @@ Le mode démo fonctionne sans backend. Pour créer un vrai compte et enregistrer
 
 ## Où se trouve l'URL du backend ?
 
-Il n'y a pas de fichier `.env` dans le frontend, et c'est volontaire.
+Le fichier `.env` contient uniquement l'URL publique du backend :
 
-- En local, [js/config.js](js/config.js) utilise `http://127.0.0.1:4000/api`.
-- Depuis un téléphone sur le même Wi-Fi, il utilise l'IP de l'ordinateur avec le port `4000`.
+```env
+BACKEND_API_URL=https://jcpmf-backend.vercel.app/
+```
+
+- En local, le serveur lit `.env` au lancement.
+- Sans cette variable, il utilise l'IP de l'ordinateur avec le port `4000`.
 - En ligne, [api/config.js](api/config.js) lit la variable `BACKEND_API_URL` configurée dans Vercel.
 
 Dans le projet **frontend** sur Vercel, ajouter :
 
 ```text
-BACKEND_API_URL=https://jcpmf-backend.vercel.app
+BACKEND_API_URL=https://jcpmf-backend.vercel.app/
 ```
 
 Puis redéployer le frontend. Pour vérifier la valeur réellement utilisée en ligne, ouvrir :
@@ -43,10 +47,11 @@ Cette page doit renvoyer une adresse qui se termine par `/api`. Les identifiants
 ## Tester sur un téléphone
 
 1. Connecter le téléphone et l'ordinateur au même Wi-Fi.
-2. Lancer le backend sur le port `4000`.
-3. Lancer le frontend avec `npm run dev`.
-4. Trouver l'adresse IP locale de l'ordinateur.
-5. Ouvrir `http://IP_DE_L_ORDINATEUR:3000` sur le téléphone.
+2. Trouver l'adresse IP locale de l'ordinateur.
+3. Pour utiliser le backend local, mettre temporairement `BACKEND_API_URL=http://IP_DE_L_ORDINATEUR:4000` dans `.env`.
+4. Lancer le backend sur le port `4000`.
+5. Lancer le frontend avec `npm run dev`.
+6. Ouvrir `http://IP_DE_L_ORDINATEUR:3000` sur le téléphone.
 
 Pour ce test, le backend doit accepter les adresses du réseau local avec `ALLOW_LAN_ORIGINS=true` dans son propre fichier `.env`.
 
